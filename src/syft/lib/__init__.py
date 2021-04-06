@@ -170,9 +170,9 @@ def load(
             if isinstance(lib, str):
                 try:
                     _load_lib(lib=str(lib), options=options)
-                except VendorLibraryImportException as e:
+                except MemoryError as e:
                     critical(e)
-                except Exception as e:
+                except MemoryError as e:
                     critical(f"Unable to load package support for: {lib}. {e}")
             else:
                 critical(
