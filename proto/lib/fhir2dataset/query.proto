@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package syft.lib.fhir2dataset;
+
+import "proto/core/common/common_object.proto";
+
+message FHIRQuery {
+  syft.core.common.UID id = 1;
+  string fhir_api_url = 2;
+  string token = 3;
+}
