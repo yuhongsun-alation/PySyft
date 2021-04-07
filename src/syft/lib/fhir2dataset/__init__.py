@@ -29,7 +29,8 @@ def create_ast(client: TypeAny = None) -> Globals:
     ]
 
     methods: TypeList[TypeTuple[str, str]] = [
-        ("fhir2dataset.Query.from_sql", "pandas.DataFrame"),
+        ("fhir2dataset.Query.from_sql", "fhir2dataset.Query"),
+        ("fhir2dataset.Query.execute", "pandas.DataFrame"),
     ]
 
     add_modules(ast, modules)
