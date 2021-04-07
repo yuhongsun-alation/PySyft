@@ -71,6 +71,7 @@ def create_ast(client: TypeAny = None) -> Globals:
         ("pandas.DataFrame.__sub__", "pandas.DataFrame"),
         ("pandas.DataFrame.__truediv__", "pandas.DataFrame"),
         ("pandas.DataFrame.dropna", "pandas.DataFrame"),
+        ("pandas.DataFrame.value_counts", "pandas.Series"),
         ("pandas.Series.__getitem__", "pandas.Series"),
         ("pandas.Series.__setitem__", "pandas.Series"),
         ("pandas.Series.__len__", "syft.lib.python.Int"),
@@ -147,6 +148,7 @@ def create_ast(client: TypeAny = None) -> Globals:
         ("pandas.Series.dropna", "pandas.Series"),
         ("pandas.Series.to_frame", "pandas.DataFrame"),
         ("pandas.Series.to_list", "syft.lib.python.List"),
+        ("pandas.Series.value_counts", "pandas.Series"),
         (
             "pandas.Series.sum",
             UnionGenerator["syft.lib.python.Float", "syft.lib.python.Int"],
