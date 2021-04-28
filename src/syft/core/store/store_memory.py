@@ -14,6 +14,7 @@ from ...logger import critical
 from ...logger import traceback_and_raise
 from ..common.uid import UID
 from .storeable_object import StorableObject
+from .store_debugger import store_logger, StoreOP
 
 
 class MemoryStore(ObjectStore):
@@ -34,6 +35,7 @@ class MemoryStore(ObjectStore):
         self._search_engine = None
         self.post_init()
 
+    @store_logger(StoreOP.GET)
     def get_object(self, key: UID) -> Optional[StorableObject]:
         return self._objects.get(key, None)
 
@@ -58,6 +60,7 @@ class MemoryStore(ObjectStore):
     def __contains__(self, key: UID) -> bool:
         return key in self._objects.keys()
 
+    @store_logger(StoreOP.GET)
     def __getitem__(self, key: UID) -> StorableObject:
         try:
             return self._objects[key]
@@ -65,9 +68,11 @@ class MemoryStore(ObjectStore):
             critical(f"{type(self)} __getitem__ error {key} {e}")
             traceback_and_raise(e)
 
+    @store_logger(StoreOP.SET)
     def __setitem__(self, key: UID, value: StorableObject) -> None:
         self._objects[key] = value
 
+    @store_logger(StoreOP.DEL)
     def delete(self, key: UID) -> None:
         try:
             obj = self.get_object(key=key)
@@ -78,6 +83,7 @@ class MemoryStore(ObjectStore):
         except Exception as e:
             critical(f"{type(self)} Exception in __delitem__ error {key}. {e}")
 
+    @store_logger(StoreOP.CLEAR)
     def clear(self) -> None:
         self._objects.clear()
 

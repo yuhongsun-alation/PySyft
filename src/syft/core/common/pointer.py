@@ -26,6 +26,5 @@ class AbstractPointer(Serializable):
         self.id_at_location = id_at_location
         self.tags = tags
         self.description = description
-        self.gc_enabled = True
 
         self.is_enum = False

@@ -90,6 +90,8 @@ from typing import Any
 from typing import List
 from typing import Optional
 import warnings
+from collections import defaultdict
+import weakref
 
 # third party
 from google.protobuf.reflection import GeneratedProtocolMessageType
@@ -115,6 +117,41 @@ from ..node.common.service.obj_search_permission_service import (
     ObjectSearchPermissionUpdateMessage,
 )
 from ..store.storeable_object import StorableObject
+from ...logger import logger
+import atexit
+
+class RefCounter:
+    __refs__ = defaultdict(list)
+
+    @staticmethod
+    def add(ptr):
+        RefCounter.__refs__[ptr.__class__.__name__].append(weakref.ref(ptr))
+
+
+    @staticmethod
+    def get_unreaped_pointers() -> List:
+        result = []
+        for weak_refs in RefCounter.__refs__.values():
+            for weak_ref in weak_refs:
+                obj = weak_ref()
+                if obj is not None:
+                    result.append(obj)
+
+        return result
+
+    @staticmethod
+    def clear_pointers():
+        pointers = RefCounter.get_unreaped_pointers()
+        for pointer in pointers:
+            if pointer.gc_enabled:
+                pointer.__del__()
+                del pointer
+
+    @staticmethod
+    def alive_pointers():
+        pointers = RefCounter.get_unreaped_pointers()
+        logger.log("STORE", f"Alive pointers: "
+                            f"{[(pointer, pointer.id_at_location) for pointer in pointers]}")
 
 
 # TODO: Fix the Client, Address, Location confusion
@@ -145,7 +182,11 @@ class Pointer(AbstractPointer):
         tags: Optional[List[str]] = None,
         description: str = "",
     ) -> None:
-        super().__init__(
+
+        RefCounter.add(self)
+
+        AbstractPointer.__init__(
+            self,
             client=client,
             id_at_location=id_at_location,
             tags=tags,
@@ -156,18 +197,37 @@ class Pointer(AbstractPointer):
         # when delete_obj is True and network call
         # has already been made
         self._exhausted = False
+        self._gc_enabled = True
+        logger.log(
+            "STORE",
+            f"POINTER CREATION - ID: {self.id_at_location} - GC: {self.gc_enabled}",
+        )
 
-    def _get(self, delete_obj: bool = True, verbose: bool = False) -> StorableObject:
+    @property
+    def gc_enabled(self) -> bool:
+        return self._gc_enabled
+
+    @gc_enabled.setter
+    def gc_enabled(self, gc_status: bool) -> None:
+        logger.log(
+            "STORE",
+            f"POINTER GC STATUS CHANGE - ID {self.id_at_location} - OLD:"
+            f" {self.gc_enabled} - "
+            f"NEW:"
+            f" {gc_status}",
+        )
+        self._gc_enabled = gc_status
+
+    def _get(self, delete_obj: bool = True) -> StorableObject:
         """Method to download a remote object from a pointer object if you have the right
         permissions.
 
         :return: returns the downloaded data
         :rtype: StorableObject
         """
-
-        debug(
-            f"> GetObjectAction for id_at_location={self.id_at_location} "
-            + f"with delete_obj={delete_obj}"
+        logger.log(
+            "STORE",
+            f"POINTER GET - ID {self.id_at_location} - delete_obj: {delete_obj}",
         )
         obj_msg = GetObjectAction(
             id_at_location=self.id_at_location,
@@ -371,7 +431,6 @@ class Pointer(AbstractPointer):
         reason: str = "",
         block: bool = False,
         timeout_secs: Optional[int] = None,
-        verbose: bool = False,
     ) -> Any:
         """Method that requests access to the data on which the pointer points to.
 
@@ -581,9 +640,20 @@ class Pointer(AbstractPointer):
 
     def __del__(self) -> None:
         _client_type = type(self.client)
+
+        logger.log(
+            "STORE",
+            f"POINTER DELETION - ID: {self.id_at_location} - GC: {self.gc_enabled}",
+        )
+
         if (_client_type == Address) or issubclass(_client_type, AbstractNode):
             # it is a serialized pointer that we receive from another client do nothing
             return
 
         if self.gc_enabled:
             self.client.gc.apply(self)
+
+
+
+atexit.register(RefCounter.clear_pointers)
+atexit.register(RefCounter.alive_pointers)
