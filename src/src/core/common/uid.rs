@@ -1,70 +1,108 @@
+use crate::core::common::serde::serializable::Serializable;
+use crate::core::common::serde::serialize::serialize;
 use crate::proto::core::common::Uid;
-use crate::proto::util::DataMessage;
-use bytes::BytesMut;
-use prost::Message;
+use pyo3::basic::CompareOp;
 use pyo3::prelude::*;
-use pyo3::pyclass;
-use pyo3::{FromPyObject, PyAny, PyResult, Python};
+use pyo3::PyObjectProtocol;
+use std::convert::TryInto;
+use std::str::FromStr;
 use uuid::Uuid;
 
-impl FromPyObject<'_> for Uid {
-    fn extract(obj: &PyAny) -> PyResult<Self> {
-        let py_proto = obj.call_method0("_object2proto").unwrap();
-        let binary_repr = py_proto.call_method0("SerializeToString").unwrap();
-        let bytes: &[u8] = binary_repr.extract().unwrap();
-        let result: Uid = Message::decode(bytes).unwrap();
-        Ok(result)
-    }
+#[pyclass]
+#[derive(Copy, Clone)]
+#[text_signature = "(int, string, bytes, /)"]
+pub struct RustUID {
+    uuid: Uuid,
 }
 
-#[pyclass]
-pub(crate) struct RustUID {
-    uuid: Uuid,
+impl Serializable for RustUID {
+    type ProtobufType = Uid;
+
+    fn _object2protobuf(&self) -> Uid {
+        let bytes = self.uuid.as_bytes().to_vec();
+
+        Uid { value: bytes }
+    }
+
+    fn _protobuf2object(object: Uid) -> Self {
+        let uid_format: [u8; 16] = object.value.try_into().unwrap();
+        RustUID {
+            uuid: Uuid::from_bytes(uid_format),
+        }
+    }
 }
 
 #[pymethods]
 impl RustUID {
     #[new]
-    fn new() -> Self {
+    pub(crate) fn new(int: Option<u128>, string: Option<&str>, bytes: Option<[u8; 16]>) -> Self {
+        let uuid = if int.is_some() {
+            Uuid::from_u128(int.unwrap())
+        } else if string.is_some() {
+            Uuid::from_str(string.unwrap()).unwrap()
+        } else if bytes.is_some() {
+            let bytes_repr: [u8; 16] = bytes.unwrap().into();
+            Uuid::from_bytes(bytes_repr)
+        } else {
+            Uuid::new_v4()
+        };
+
+        RustUID { uuid }
+    }
+
+    pub(crate) fn serialize(&self, compression: bool) -> Vec<u8> {
+        let bytes: Vec<u8> = serialize(self.to_owned(), compression).to_vec();
+        bytes
+    }
+
+    pub fn hex(&self) -> String {
+        self.uuid.to_simple().to_string()
+    }
+
+    pub fn int(&self) -> u128 {
+        self.uuid.as_u128()
+    }
+
+    #[staticmethod]
+    pub fn from_string(str: &str) -> Self {
         RustUID {
-            uuid: uuid::Uuid::new_v4(),
+            uuid: Uuid::from_str(str).unwrap(),
         }
     }
 
-    fn serialize(&mut self) -> Vec<u8> {
-        let qualname = "syft.core.common.UID";
-        let bytes = self.uuid.as_bytes();
-        let mut mutbuf = BytesMut::new();
-        let uid_msg = Uid {
-            value: bytes.to_vec(),
-        };
-        uid_msg.encode(&mut mutbuf);
+    pub fn emoji(&self) -> String {
+        self.__repr__()
+    }
 
-        let msg = DataMessage {
-            obj_type: qualname.to_owned(),
-            content: mutbuf.to_vec(),
-        };
+    #[getter(value)]
+    fn get_value(&self) -> PyResult<u128> {
+        Ok(self.int())
+    }
 
-        let mut bfr = BytesMut::new();
-
-        msg.encode(&mut bfr);
-
-        bfr.to_vec()
+    #[setter(value)]
+    fn set_value(&mut self, value: u128) -> PyResult<()> {
+        self.uuid = uuid::Uuid::from_u128(value);
+        Ok(())
     }
 }
 
-impl Uid {
-    pub fn serialize(&self) -> Vec<u8> {
-        let qualname = "syft.core.common.UID";
-        let mut buf = BytesMut::new();
-        Message::encode(self, &mut buf).unwrap();
-        let msg = DataMessage {
-            obj_type: qualname.to_owned(),
-            content: buf.to_vec(),
-        };
+#[pyproto]
+impl PyObjectProtocol for RustUID {
+    fn __repr__(&self) -> String {
+        format!("<UID: {}>", self.hex())
+    }
 
-        let mut result = BytesMut::new();
-        Message::encode(&msg, &mut result);
-        result.to_vec()
+    fn __hash__(&self) -> u64 {
+        // big problem with the 128 bits hash, I am reducing it to u64 for now but it make
+        // create collision issues
+        self.int() as u64
+    }
+
+    fn __richcmp__(&self, other: RustUID, op: CompareOp) -> bool {
+        match op {
+            CompareOp::Eq => self.uuid == other.uuid,
+            CompareOp::Ne => !(self.uuid == other.uuid),
+            _ => panic!("Operation not supported."),
+        }
     }
 }
