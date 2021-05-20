@@ -1,0 +1,84 @@
+name: Syft Core PR Tests
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - feature/rust
+    paths:
+      - ".github/workflows/syft-*.yml"
+      - "packages/syft/**.py"
+      - "packages/syft/setup.cfg"
+      - "packages/syft/**.rs"
+      - "packages/syft/**.toml"
+      - "packages/syft/**.proto"
+
+jobs:
+  python-rust-core:
+    strategy:
+      max-parallel: 3
+      matrix:
+        # os: [windows-latest, ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
+        python-version: [3.9]
+        torch-version: [1.8.1]
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Upgrade pip
+        run: |
+          pip install --upgrade --user pip
+
+      - name: Get pip cache dir
+        id: pip-cache
+        run: |
+          echo "::set-output name=dir::$(pip cache dir)"
+
+      - name: pip cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: ${{ runner.os }}-pip-py${{ matrix.python-version }}-${{ hashFiles('setup.cfg') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-py${{ matrix.python-version }}-
+
+      - name: Install rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+          components: rustfmt, clippy
+
+      - name: Hack pre-commit # https://github.com/pre-commit/action/issues/44
+        run: |
+          pwd
+          ls
+          cp .pre-commit-config.yaml ../../
+      - uses: pre-commit/action@v2.0.0
+      - name: Install Dependencies
+        run: |
+          pip install packaging --default-timeout=60
+          python scripts/adjust_torch_versions.py ./setup.cfg ${{ matrix.torch-version }}
+          grep -A 3 "torch_ecosystem" setup.cfg
+          pip install -e .[ci-all] -f https://download.pytorch.org/whl/torch_stable.html
+          python scripts/parse_setup.py setup.cfg | xargs pip install --no-deps || true
+
+      - name: maturin build
+        run: |
+          cd src && maturin build -i python
+          pip install `find -L ./target/wheels -name "*.whl"`
+
+      - name: Run normal tests
+        run: |
+          pytest -m fast -n auto
+
+      - name: Run rust tests
+        run: |
+          pytest -m rust -n auto
