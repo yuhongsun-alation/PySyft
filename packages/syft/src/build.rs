@@ -19,7 +19,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             })
         })
         .collect();
-    prost_build::compile_protos(&files, &[Path::new("../").to_path_buf()])?;
+    let mut prost_build = prost_build::Config::new();
+    prost_build.protoc_arg("--experimental_allow_proto3_optional");
+    prost_build.compile_protos(&files, &[Path::new("../").to_path_buf()])?;
 
     Ok(())
 }
