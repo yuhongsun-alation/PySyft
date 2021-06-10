@@ -4,7 +4,7 @@ use tonic::{Request, Response, Status};
 
 pub use message::message_client::MessageClient;
 pub use message::message_server::MessageServer;
-pub use message::{syft_message::Id, SyftMessage};
+pub use message::DataMessage;
 pub use std::collections::HashMap;
 
 pub mod message {
@@ -18,8 +18,8 @@ pub struct MyMessage {}
 impl Message for MyMessage {
     async fn send_message(
         &self,
-        request: Request<SyftMessage>,
-    ) -> Result<Response<SyftMessage>, Status> {
+        request: Request<DataMessage>,
+    ) -> Result<Response<DataMessage>, Status> {
         // dispatch message to capability
         let config = get_config().clone();
         let message = request.into_inner();

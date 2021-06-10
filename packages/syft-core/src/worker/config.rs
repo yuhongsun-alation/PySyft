@@ -1,5 +1,5 @@
 use crate::capabilities::helloworld::{GreeterClient, HelloRequest};
-use crate::capabilities::message::{MessageClient, SyftMessage};
+use crate::capabilities::message::{DataMessage, MessageClient};
 use crate::capabilities::node::{ConfigClient, ConnectRequest, NodeRequest};
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
@@ -49,8 +49,8 @@ pub trait Configurable {
     fn run_class_method_message(
         &mut self,
         url: String,
-        message: SyftMessage,
-    ) -> Result<SyftMessage, Box<dyn std::error::Error>>;
+        message: DataMessage,
+    ) -> Result<DataMessage, Box<dyn std::error::Error>>;
     fn request_capabilities(
         &mut self,
         url: String,
@@ -63,7 +63,7 @@ pub struct Callback {
 }
 
 pub trait Callable: Send {
-    fn execute(&self, message: SyftMessage) -> Result<SyftMessage, Box<dyn std::error::Error>>;
+    fn execute(&self, message: DataMessage) -> Result<DataMessage, Box<dyn std::error::Error>>;
 }
 
 use core::fmt::Debug;
@@ -190,8 +190,8 @@ impl Configurable for WorkerConfig {
     fn run_class_method_message(
         &mut self,
         url: String,
-        message: SyftMessage,
-    ) -> Result<SyftMessage, Box<dyn std::error::Error>> {
+        message: DataMessage,
+    ) -> Result<DataMessage, Box<dyn std::error::Error>> {
         let request = tonic::Request::new(message);
 
         match self.runtime.block_on(MessageClient::connect(url)) {

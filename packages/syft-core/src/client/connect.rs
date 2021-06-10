@@ -1,4 +1,4 @@
-use crate::capabilities::message::SyftMessage;
+use crate::capabilities::message::DataMessage;
 use crate::worker::{get_config, Configurable};
 
 /// connect to another node
@@ -23,8 +23,8 @@ pub fn request_capabilities(url: String) -> Result<Vec<String>, Box<dyn std::err
 /// connect to another node and say hello
 pub fn run_class_method_message(
     url: String,
-    message: SyftMessage,
-) -> Result<SyftMessage, Box<dyn std::error::Error>> {
+    message: DataMessage,
+) -> Result<DataMessage, Box<dyn std::error::Error>> {
     let config = get_config();
 
     let result = config

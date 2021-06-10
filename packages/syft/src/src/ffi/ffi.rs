@@ -2,7 +2,8 @@ use pyo3::prelude::*;
 use pyo3::types::{PyBytes, PyUnicode};
 use pyo3::{wrap_pyfunction, wrap_pymodule};
 use std::thread;
-use syft_core::capabilities::message::SyftMessage;
+// use syft_core::capabilities::message::SyftMessage;
+use syft_core::capabilities::message::DataMessage;
 use syft_core::worker::{add_capability, start_on_runtime, Callable, Callback};
 
 // the module will be syft but with a mixed python project it becomes syft.syft
@@ -52,7 +53,7 @@ fn start(local_iface: &PyUnicode, port: u32) -> PyResult<()> {
 struct PyCallback(PyObject);
 
 impl Callable for PyCallback {
-    fn execute(&self, message: SyftMessage) -> Result<SyftMessage, Box<dyn std::error::Error>> {
+    fn execute(&self, message: DataMessage) -> Result<DataMessage, Box<dyn std::error::Error>> {
         let mut message_bytes = vec![];
         to_bytes(&message, &mut message_bytes).expect("Rust Failed to encode message");
 
@@ -64,7 +65,7 @@ impl Callable for PyCallback {
 
         // lets get the result of the function back into py_bytes
         let py_bytes: &PyBytes;
-        let response: SyftMessage;
+        let response: DataMessage;
 
         if let Ok(result) = py_result {
             if let Ok(bytes) = result.extract(py) {
@@ -133,7 +134,7 @@ fn run_class_method_message(
     py_bytes: &PyBytes,
 ) -> PyResult<std::vec::Vec<u8>> {
     // deserialize
-    let request: SyftMessage;
+    let request: DataMessage;
     request = from_bytes(py_bytes.as_bytes()).expect("Rust Failed to decode message");
 
     let addr: String = target_addr.extract()?;
