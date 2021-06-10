@@ -268,9 +268,7 @@ def get_workers_msg(
         envs = node.environments.get_environments(user=_current_user_id)
 
         workers = []
-        print("Node environments: ", node.environments.all()[0].id)
         for env in envs:
-            print("Here!", env.id)
             _env = node.environments.first(id=env.id)
 
             if (
