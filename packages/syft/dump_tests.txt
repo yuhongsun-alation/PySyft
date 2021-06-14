@@ -1,0 +1,131 @@
+ tests/syft/lib/torch/device_test.py::test_device_serde[None-cpu] ✓                                                                                                                                                                                         0%
+[gw3] PASSED tests/syft/lib/torch/device_test.py
+ tests/syft/lib/torch/device_test.py::test_device_serde[0-cuda] ✓                                                                                                                                                                                           0%
+[gw1] PASSED tests/syft/lib/torch/device_test.py
+ tests/syft/lib/torch/device_test.py::test_device_serde[None-cuda] ✓                                                                                                                                                                                        0%
+[gw0] PASSED tests/syft/lib/torch/device_test.py
+ tests/syft/lib/torch/device_test.py::test_device_serde[0-cpu] ✓                                                                                                                                                                                            0% ▏
+[gw2] PASSED tests/syft/lib/torch/device_test.py
+ tests/syft/lib/python/float/float_test.py::test_matches_Float_format ✓                                                                                                                                                                                     1% ▏
+[gw1] PASSED tests/syft/lib/python/float/float_test.py
+ tests/syft/lib/torch/tensor/tensor_remote_and_serde_test.py::test_torch_no_read_permissions ✓                                                                                                                                                              1% ▏
+[gw0] PASSED tests/syft/lib/torch/tensor/tensor_remote_and_serde_test.py
+ tests/syft/lib/torch/parameter_test.py::test_parameter_vm_remote_operation ✓                                                                                                                                                                               1% ▏
+[gw3] PASSED tests/syft/lib/torch/parameter_test.py
+ tests/syft/lib/torch/tensor/tensor_remote_and_serde_test.py::test_torch_remote_tensor_register ✓                                                                                                                                                           1% ▏
+[gw2] PASSED tests/syft/lib/torch/tensor/tensor_remote_and_serde_test.py
+ tests/syft/lib/torch/client_torch_test.py::test_torch_function ✓                                                                                                                                                                                           1% ▏
+[gw2] PASSED tests/syft/lib/torch/client_torch_test.py
+ tests/syft/core/node/common/service/child_node_lifecycle_service_test.py::test_child_node_lifecycle_message_serde ✓                                                                                                                                        1% ▎
+[gw0] PASSED tests/syft/core/node/common/service/child_node_lifecycle_service_test.py
+ tests/stress/gc_test.py::test_same_var_for_ptr_gc ✓                                                                                                                                                                                                        1% ▎
+[gw1] PASSED tests/stress/gc_test.py
+ tests/syft/lib/torch/module_serde_test.py::test_linear_module ✓                                                                                                                                                                                            1% ▎
+[gw3] PASSED tests/syft/lib/torch/module_serde_test.py
+ tests/syft/lib/python/dict/dict_test.py::DictTest.test_merge_and_mutate ✓                                                                                                                                                                                  1% ▎
+[gw0] PASSED tests/syft/lib/python/dict/dict_test.py
+ tests/syft/lib/python/dict/dict_test.py::DictTest.test_copy_fuzz ✓                                                                                                                                                                                         2% ▎
+[gw1] PASSED tests/syft/lib/python/dict/dict_test.py
+ tests/syft/lib/python/dict/dict_test.py::DictTest.test_literal_constructor ✓                                                                                                                                                                               2% ▎
+[gw0] PASSED tests/syft/lib/python/dict/dict_test.py
+ tests/syft/lib/python/dict/dict_test.py::DictTest.test_container_iterator X                                                                                                                                                                                2% ▎
+[gw1] XPASS tests/syft/lib/python/dict/dict_test.py
+ tests/syft/lib/torch/module_test.py::test_debug_sum_layers ✓                                                                                                                                                                                               2% ▎
+[gw1] PASSED tests/syft/lib/torch/module_test.py
+ tests/syft/lib/torch/module_test.py::test_nest_sy_module ✓                                                                                                                                                                                                 2% ▎
+[gw0] PASSED tests/syft/lib/torch/module_test.py
+ tests/syft/api/load_lib_test.py::test_load_lib ✓                                                                                                                                                                                                           2% ▎
+[gw1] PASSED tests/syft/api/load_lib_test.py
+ tests/syft/lib/torch/module_test.py::test_module_parameteres ✓                                                                                                                                                                                             2% ▎
+[gw0] PASSED tests/syft/lib/torch/module_test.py
+ tests/syft/lib/python/dict/dict_test.py::DictTest.test_free_after_iterating x                                                                                                                                                                              2% ▎
+[gw2] xfail tests/syft/lib/python/dict/dict_test.py
+ tests/syft/lib/python/complex/complex_test.py::ComplexTest.test_richcompare_boundaries ✓                                                                                                                                                                   2% ▎
+[gw1] PASSED tests/syft/lib/python/complex/complex_test.py
+ tests/syft/lib/python/complex/complex_test.py::ComplexTest.test_truediv ✓                                                                                                                                                                                  2% ▎
+[gw0] PASSED tests/syft/lib/python/complex/complex_test.py
+ tests/syft/lib/pandas/categorical_test.py::test_categorical_func[inputs1-test_object1] X                                                                                                                                                                   3% ▍
+[gw1] XPASS tests/syft/lib/pandas/categorical_test.py
+ tests/syft/lib/python/dict/dict_test.py::DictTest.test_popitem ✓                                                                                                                                                                                           3% ▍
+[gw3] PASSED tests/syft/lib/python/dict/dict_test.py
+ tests/syft/core/remote_dataloader/remote_dataloader_test.py::test_remote_dataloader ✓                                                                                                                                                                      3% ▍
+[gw1] PASSED tests/syft/core/remote_dataloader/remote_dataloader_test.py
+ tests/syft/lib/python/string/string_utils_test.py::test_find ✓                                                                                                                                                                                             3% ▍
+[gw1] PASSED tests/syft/lib/python/string/string_utils_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[string-Op en Min ed-title] ✓                                                                                                                                               3% ▍
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[string-ANDREW-islower] ✓                                                                                                                                                   3% ▍
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[ordered_dict-test_object782-__eq__] ✓                                                                                                                                      3% ▍
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[string-tud\t\nor-rstrip] ✓                                                                                                                                                 3% ▍
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[int-0-__sub__] ✓                                                                                                                                                           3% ▍
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[float-42.5-__ne__] ✓                                                                                                                                                       4% ▍
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[int-0-__lshift__] ✓                                                                                                                                                        4% ▍
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[float-1024.5-__eq__] ✓                                                                                                                                                     4% ▍
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[float-42.5-__mod__] ✓                                                                                                                                                      4% ▍
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[bool-False-__ceil__] ✓                                                                                                                                                     4% ▌
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[string-Op en Min ed-upper] ✓                                                                                                                                               4% ▌
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[string-J A Y-lower] ✓                                                                                                                                                      4% ▌
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[int--1024-__rand__] ✓                                                                                                                                                      4% ▌
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[string-J A Y-rindex] ✓                                                                                                                                                     4% ▌
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[string-J A Y-replace] ✓                                                                                                                                                    5% ▌
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[string-J A Y-rpartition] ✓                                                                                                                                                 5% ▌
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[string-ANDREW-__ge__] ✓                                                                                                                                                    5% ▌
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[float-1024.5-__rdivmod__] ✓                                                                                                                                                5% ▌
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[list-test_object808-__len__] ✓                                                                                                                                             5% ▌
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[int-0-__rrshift__] ✓                                                                                                                                                       5% ▌
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[string-J A Y-__getitem__] ✓                                                                                                                                                5% ▌
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[ordered_dict-test_object785-__ne__] ✓                                                                                                                                      5% ▌
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[string-george-rfind] ✓                                                                                                                                                     5% ▋
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[ordered_dict-test_object781-__delitem__] ✓                                                                                                                                 6% ▋
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[float--1024.5-__eq__] ✓                                                                                                                                                    6% ▋
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[int--1024-__pow__] ✓                                                                                                                                                       6% ▋
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[set-test_object424-difference_update] ✓                                                                                                                                    6% ▋
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[int-0-__mul__] ✓                                                                                                                                                           6% ▋
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[int-0-__mod__] ✓                                                                                                                                                           6% ▋
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[bool-True-__invert__] ✓                                                                                                                                                    6% ▋
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[string-J A Y-isdecimal] ✓                                                                                                                                                  6% ▋
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[string-J A Y-lstrip] ✓                                                                                                                                                     6% ▋
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[string-george-__rmul__] ✓                                                                                                                                                  6% ▋
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[int-42-__truediv__] ✓                                                                                                                                                      7% ▋
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[bool-False-__divmod__] ✓                                                                                                                                                   7% ▋
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+ tests/syft/lib/pandas/categorical_test.py::test_categorical_func[inputs0-test_object1] x                                                                                                                                                                   7% ▊
+[gw0] xfail tests/syft/lib/pandas/categorical_test.py
+ tests/syft/core/pointer/primitive_type_pointer_test.py::test_pointer_objectives[int-42-__rxor__] ✓                                                                                                                                                         7% ▊
+[gw1] PASSED tests/syft/core/pointer/primitive_type_pointer_test.py
+
+
+―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― test_categorical_func[inputs2-test_object0]

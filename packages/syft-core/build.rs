@@ -1,21 +1,29 @@
-use std::fs;
+use tonic_build;
+use std::path::Path;
+use std::process::Command;
+use walkdir;
 
-/// dynamically compiles all protos
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let files = fs::read_dir("../proto/syft-core").unwrap();
-
-    files
-        .filter_map(Result::ok)
-        .filter_map(|d| {
-            d.path()
-                .to_str()
-                .and_then(|f| if f.ends_with(".proto") { Some(d) } else { None })
+    let files: Vec<_> = walkdir::WalkDir::new("../proto/protobuffers")
+        .into_iter()
+        .filter_map(|dir_entry| {
+            dir_entry.ok().and_then(|entry| {
+                if entry.file_type().is_dir() {
+                    None
+                } else {
+                    if entry.file_name().to_str().unwrap().ends_with(".proto") {
+                        Some(entry.path().to_owned())
+                    } else {
+                        None
+                    }
+                }
+            })
         })
-        .for_each(|f| {
-            println!("file: {:?}", f);
-            tonic_build::compile_protos(f.path())
-                .unwrap_or_else(|e| panic!("Failed to compile proto {:?}", e));
-        });
+        .collect();
+
+
+    tonic_build::configure()
+        .compile(&files, &[Path::new("../").to_path_buf()])?;
 
     Ok(())
 }

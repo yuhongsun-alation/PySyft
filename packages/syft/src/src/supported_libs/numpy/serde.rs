@@ -1,7 +1,6 @@
-use crate::proto::lib::numpy::{DataType, TensorProto};
-use crate::proto::util::DataMessage;
+use syft_core::proto::lib::numpy::{DataType, TensorProto};
+use syft_core::proto::util::DataMessage;
 use numpy::npyffi::npy_float;
-use prost::Message;
 use pyo3::prelude::*;
 use pyo3::PyResult;
 

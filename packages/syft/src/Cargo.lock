@@ -888,13 +888,18 @@ dependencies = [
 name = "syft-core"
 version = "0.1.0"
 dependencies = [
+ "bytes",
  "lazy_static",
+ "numpy",
  "prost",
+ "prost-build",
+ "prost-types",
  "tokio",
  "tonic",
  "tonic-build",
  "url",
  "uuid",
+ "walkdir",
 ]
 
 [[package]]

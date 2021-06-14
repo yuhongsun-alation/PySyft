@@ -1,7 +1,0 @@
-syntax = "proto3";
-
-package syft.lib.pil;
-
-import "proto/lib/torch/tensor.proto";
-
-message Image { syft.lib.torch.TensorProto data = 1; }

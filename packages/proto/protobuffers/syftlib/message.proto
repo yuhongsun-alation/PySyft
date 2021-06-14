@@ -1,0 +1,24 @@
+syntax = "proto3";
+package syft.syftlib;
+
+service Message { rpc SendMessage(DataMessage) returns (DataMessage); }
+
+// message protoMessage {
+//   oneof Id {
+//     bool id_null = 100;
+//     string local_id = 101;
+//     string remote = 102;
+//   }
+
+//   string capability = 201;
+
+//   repeated string args = 300;
+//   map<string, string> kwargs = 400;
+//   bytes obj = 501;
+// }
+
+message DataMessage {
+  string obj_type = 1;
+  bytes content = 2;
+  string capability = 3;
+}

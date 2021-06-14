@@ -1,10 +1,9 @@
 use crate::core::common::serde::serializable::Serializable;
 use crate::core::common::serde::serialize::serialize;
-use crate::proto::core::common::Uid;
+use syft_core::proto::core::common::Uid;
 use pyo3::basic::CompareOp;
 use pyo3::prelude::*;
 use pyo3::PyObjectProtocol;
-use std::convert::TryInto;
 use std::str::FromStr;
 use uuid::Uuid;
 

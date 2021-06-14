@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package proto.grid.messages;
+
+import "proto/core/common/common_object.proto";
+import "proto/core/io/address.proto";
+
+
+// CREATE GROUP
+message CreateGroupMessage {
+  proto.core.common.UID msg_id = 1;
+  proto.core.io.Address address = 2;
+  string content = 3;
+  proto.core.io.Address reply_to = 4;
+}
+
+message CreateGroupResponse {
+  proto.core.common.UID msg_id = 1;
+  int32 status_code = 2;
+  string content = 3;
+  proto.core.io.Address address = 4;
+}
+
+// GET Group
+message GetGroupMessage {
+  proto.core.common.UID msg_id = 1;
+  proto.core.io.Address address = 2;
+  string content = 3;
+  proto.core.io.Address reply_to = 4;
+}
+
+
+message GetGroupResponse {
+  proto.core.common.UID msg_id = 1;
+  int32 status_code = 2;
+  string content = 3;
+  proto.core.io.Address address = 4;
+}
+
+// GET ALL Groups
+message GetGroupsMessage {
+  proto.core.common.UID msg_id = 1;
+  proto.core.io.Address address = 2;
+  string content = 3;
+  proto.core.io.Address reply_to = 4;
+}
+
+message GetGroupsResponse {
+  proto.core.common.UID msg_id = 1;
+  int32 status_code = 2;
+  string content = 3;
+  proto.core.io.Address address = 4;
+}
+
+// Delete Group
+message DeleteGroupMessage {
+  proto.core.common.UID msg_id = 1;
+  proto.core.io.Address address = 2;
+  string content = 3;
+  proto.core.io.Address reply_to = 4;
+}
+
+message DeleteGroupResponse {
+  proto.core.common.UID msg_id = 1;
+  int32 status_code = 2;
+  string content = 3;
+  proto.core.io.Address address = 4;
+}
+
+// UPDATE Group
+message UpdateGroupMessage {
+  proto.core.common.UID msg_id = 1;
+  proto.core.io.Address address = 2;
+  string content = 3;
+  proto.core.io.Address reply_to = 4;
+}
+
+message UpdateGroupResponse {
+  proto.core.common.UID msg_id = 1;
+  int32 status_code = 2;
+  string content = 3;
+  proto.core.io.Address address = 4;
+}

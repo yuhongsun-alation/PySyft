@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+package proto.grid.messages;
+
+import "proto/core/common/common_object.proto";
+import "proto/core/io/address.proto";
+
+
+// CREATE User
+message CreateUserMessage {
+  proto.core.common.UID msg_id = 1;
+  proto.core.io.Address address = 2;
+  string content = 3;
+  proto.core.io.Address reply_to = 4;
+}
+
+message CreateUserResponse {
+  proto.core.common.UID msg_id = 1;
+  int32 status_code = 2;
+  string content = 3;
+  proto.core.io.Address address = 4;
+}
+
+// GET User
+message GetUserMessage {
+  proto.core.common.UID msg_id = 1;
+  proto.core.io.Address address = 2;
+  string content = 3;
+  proto.core.io.Address reply_to = 4;
+}
+
+
+message GetUserResponse {
+  proto.core.common.UID msg_id = 1;
+  int32 status_code = 2;
+  string content = 3;
+  proto.core.io.Address address = 4;
+}
+
+// GET ALL Users
+message GetUsersMessage {
+  proto.core.common.UID msg_id = 1;
+  proto.core.io.Address address = 2;
+  string content = 3;
+  proto.core.io.Address reply_to = 4;
+}
+
+message GetUsersResponse {
+  proto.core.common.UID msg_id = 1;
+  int32 status_code = 2;
+  string content = 3;
+  proto.core.io.Address address = 4;
+}
+
+// Delete User
+message DeleteUserMessage {
+  proto.core.common.UID msg_id = 1;
+  proto.core.io.Address address = 2;
+  string content = 3;
+  proto.core.io.Address reply_to = 4;
+}
+
+message DeleteUserResponse {
+  proto.core.common.UID msg_id = 1;
+  int32 status_code = 2;
+  string content = 3;
+  proto.core.io.Address address = 4;
+}
+
+// UPDATE User
+message UpdateUserMessage {
+  proto.core.common.UID msg_id = 1;
+  proto.core.io.Address address = 2;
+  string content = 3;
+  proto.core.io.Address reply_to = 4;
+}
+
+message UpdateUserResponse {
+  proto.core.common.UID msg_id = 1;
+  int32 status_code = 2;
+  string content = 3;
+  proto.core.io.Address address = 4;
+}
+
+// Search Users
+message SearchUsersMessage {
+  proto.core.common.UID msg_id = 1;
+  proto.core.io.Address address = 2;
+  string content = 3;
+  proto.core.io.Address reply_to = 4;
+}
+
+message SearchUsersResponse {
+  proto.core.common.UID msg_id = 1;
+  int32 status_code = 2;
+  string content = 3;
+  proto.core.io.Address address = 4;
+}

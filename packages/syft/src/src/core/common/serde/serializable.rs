@@ -1,4 +1,4 @@
-use crate::proto::util::DataMessage;
+use syft_core::proto::util::DataMessage;
 use bytes::BytesMut;
 use prost::Message;
 
