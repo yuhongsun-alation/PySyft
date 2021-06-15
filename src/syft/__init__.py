@@ -69,6 +69,7 @@ from syft.core.plan.plan_builder import make_plan  # noqa: F401
 # Convenience Functions
 from syft.grid.duet import bcolors  # noqa: F401
 from syft.grid.duet import duet  # noqa: F401
+from syft.grid.duet_network.multi_pointer_proxy import MultiPointerProxy  # noqa: F401
 from syft.grid.duet import join_duet  # noqa: F401
 from syft.grid.duet import launch_duet  # noqa: F401
 
