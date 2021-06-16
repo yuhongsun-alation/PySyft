@@ -4,8 +4,10 @@ from __future__ import annotations
 # stdlib
 import ast
 import sys
+from typing import Any
 from typing import List
 from typing import Optional
+from typing import Tuple
 
 # third party
 import _ast
@@ -15,6 +17,7 @@ from nacl.signing import VerifyKey
 # syft relative
 from ..... import serialize
 from .....generate_wrapper import GenerateWrapper
+from .....lib import bind_ast
 from .....logger import debug
 from .....logger import traceback
 from .....proto.core.ast.module_pb2 import AstModule as AstModule_PB
@@ -31,7 +34,7 @@ from ...abstract.node import AbstractNode
 from .auth import service_auth
 from .node_service import ImmediateNodeServiceWithoutReply
 
-# TEMP CODE PLAYGROUND
+# TODO: Ugly TEMP CODE PLAYGROUND
 
 
 def object2proto(obj: _ast.Module) -> AstModule_PB:
@@ -207,7 +210,32 @@ def validate_nodes(nodes):
     return True
 
 
-# TEMP CODE PLAYGROUND
+def bind_to_global_ast():
+    # stdlib
+    import sys
+
+    sandbox = sys.modules["syft"].sandbox
+    mylib = sandbox.mylib
+    modules: List[Tuple[str, Any]] = [
+        ("syft.sandbox", sandbox),
+        ("syft.sandbox.mylib", mylib),
+    ]
+
+    classes: List[Tuple[str, str, Any]] = [
+        ("syft.sandbox.mylib.Test", "syft.sandbox.mylib.Test", mylib.Test),
+    ]
+
+    methods: List[Tuple[str, str]] = [
+        ("syft.sandbox.mylib.Test.hello", "syft.lib.python.String"),
+    ]
+
+    try:
+        bind_ast("mylib", modules, classes, methods)
+    except Exception as e:
+        print("failed to bind ast", e)
+
+
+# TODO: Ugly TEMP CODE PLAYGROUND
 
 
 @bind_protobuf
@@ -256,6 +284,7 @@ class SecureExecService(ImmediateNodeServiceWithoutReply):
             nodes = parse_all_nodes(msg.ast_tree)
             if validate_nodes(nodes):
                 exec(compile(msg.ast_tree, filename="<ast>", mode="exec"))  # nosec
+                bind_to_global_ast()
                 print("Accepting, code executed successfully!")
             else:
                 print("Rejecting, code is insecure!")

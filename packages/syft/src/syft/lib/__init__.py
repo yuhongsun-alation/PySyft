@@ -1,4 +1,5 @@
 # stdlib
+import functools
 import importlib
 import sys
 from types import ModuleType
@@ -20,6 +21,9 @@ from packaging import version
 import wrapt
 
 # syft relative
+from ..ast import add_classes
+from ..ast import add_methods
+from ..ast import add_modules
 from ..ast.globals import Globals
 from ..core.node.abstract.node import AbstractNodeClient
 from ..lib.plan import create_plan_ast
@@ -31,6 +35,7 @@ from ..logger import critical
 from ..logger import traceback_and_raise
 from ..logger import warning
 from .misc import create_union_ast
+from .util import generic_update_ast
 
 
 class VendorLibraryImportException(Exception):
@@ -274,3 +279,30 @@ def post_import_hook_third_party(module: TypeAny) -> None:
     # warning(msg, print=True)
     # warnings.warn(msg, DeprecationWarning)
     load(module.__name__, ignore_warning=True)
+
+
+# TODO: Ugly Code Sandbox
+def bind_ast(lib_name, modules, classes, methods) -> None:
+    global lib_ast
+
+    # update global first
+    new_lib_ast = dynamic_update_ast(None, modules, classes, methods)
+    lib_ast.syft.add_attr("sandbox", attr=new_lib_ast.sandbox)
+
+
+def dynamic_update_ast(client, modules, classes, methods) -> Globals:
+    ast = Globals(client)
+
+    add_modules(ast, modules)
+    add_classes(ast, classes)
+    add_methods(ast, methods)
+
+    for klass in ast.classes:
+        klass.create_pointer_class()
+        klass.create_send_method()
+        klass.create_storable_object_attr_convenience_methods()
+
+    return ast
+
+
+# TODO: End Ugly Code Sandbox

@@ -54,7 +54,7 @@ def dump(node, annotate_fields=True, include_attributes=False, indent="  "):
         return repr(node)
 
     if not isinstance(node, AST):
-        raise TypeError("expected AST, got %r" % node.__class__.__name__)
+        raise TypeError(f"expected AST, got {node.__class__.__name__!r}")
     return _format(node)
 
 
