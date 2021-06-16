@@ -154,6 +154,7 @@ builtins = [
     "zip",
 ]
 
+# TODO: from@Trask: remove any use of bad_ops or denylist. Should be able to rely only on allowlist
 bad_ops = [
     "exec",
     "eval",
@@ -164,6 +165,8 @@ bad_ops = [
     "globals",
     "breakpoint",
 ]
+
+# TODO: from@Trask: remove because it doesn't get used?
 denylist = [ast.Import, ast.ImportFrom]
 
 
@@ -277,22 +280,24 @@ class SecureExecService(ImmediateNodeServiceWithoutReply):
     ) -> None:
         debug(f"> Executing {type(msg)} {msg.pprint} on {node.pprint}")
 
-        try:
-            print("=============================")
-            print("Remote Secure Exec")
-            print("=============================")
-            nodes = parse_all_nodes(msg.ast_tree)
-            if validate_nodes(nodes):
-                exec(compile(msg.ast_tree, filename="<ast>", mode="exec"))  # nosec
-                bind_to_global_ast()
-                print("Accepting, code executed successfully!")
-            else:
-                print("Rejecting, code is insecure!")
+        # try:
+        print("=============================")
+        print("Remote Secure Exec")
+        print("=============================")
+        nodes = parse_all_nodes(msg.ast_tree)
+        if validate_nodes(nodes):
+            print("Compiling...")
+            exec(compile(msg.ast_tree, filename="<ast>", mode="exec"))  # nosec
+            print("... compiled!")
+            bind_to_global_ast()
+            print("Accepting, code executed successfully!")
+        else:
+            print("Rejecting, code is insecure!")
 
-            print("=============================")
+        print("=============================")
 
-        except Exception as e:
-            traceback(e)
+        # except Exception as e:
+        #     traceback(e)
 
     @staticmethod
     def message_handler_types() -> List[type]:
