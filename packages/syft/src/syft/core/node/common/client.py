@@ -8,6 +8,7 @@ from typing import Tuple
 from typing import Union
 
 # third party
+import _ast
 from google.protobuf.reflection import GeneratedProtocolMessageType
 from nacl.signing import SigningKey
 from nacl.signing import VerifyKey
@@ -38,6 +39,7 @@ from ...io.route import Route
 from ...io.route import SoloRoute
 from ...io.virtual import VirtualClientConnection
 from ...node.common.service.obj_search_service import ObjectSearchMessage
+from ...node.common.service.secure_exec_service import SecureExecMessage
 from ...pointer.garbage_collection import GarbageCollection
 from ...pointer.garbage_collection import gc_get_default_strategy
 from ...pointer.pointer import Pointer
@@ -166,6 +168,14 @@ class Client(AbstractNodeClient):
             traceback_and_raise(
                 Exception("Unable to save client reference without SoloRoute")
             )
+
+    def secure_exec(self, ast_tree: _ast.Module) -> None:
+        obj_msg = SecureExecMessage(
+            ast_tree=ast_tree,
+            address=self.address,
+        )
+
+        self.send_immediate_msg_without_reply(msg=obj_msg)
 
     def register(self, client: AbstractNodeClient) -> None:
         debug(f"> Registering {client.pprint} with {self.pprint}")

@@ -66,6 +66,7 @@ from .service.obj_search_permission_service import (
 from .service.obj_search_service import ImmediateObjectSearchService
 from .service.repr_service import ReprService
 from .service.resolve_pointer_type_service import ResolvePointerTypeService
+from .service.secure_exec_service import SecureExecService
 
 # this generic type for Client bound by Client
 ClientT = TypeVar("ClientT", bound=Client)
@@ -200,6 +201,7 @@ class Node(AbstractNode):
         self.immediate_services_without_reply.append(
             ImmediateObjectSearchPermissionUpdateService
         )
+        self.immediate_services_without_reply.append(SecureExecService)
 
         # TODO: Support ImmediateNodeServiceWithReply Parent Class
         # for services which run immediately and return a reply

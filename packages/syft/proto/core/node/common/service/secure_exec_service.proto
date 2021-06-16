@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package syft.core.node.common.service;
+
+import "proto/core/common/common_object.proto";
+import "proto/core/io/address.proto";
+import "proto/core/ast/module.proto";
+
+message SecureExecMessage {
+  syft.core.common.UID msg_id = 1;
+  syft.core.io.Address address = 2;
+  syft.core.ast.AstModule ast_tree = 3;
+}
