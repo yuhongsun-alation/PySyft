@@ -1,5 +1,4 @@
 # stdlib
-import functools
 import importlib
 import sys
 from types import ModuleType
@@ -35,7 +34,6 @@ from ..logger import critical
 from ..logger import traceback_and_raise
 from ..logger import warning
 from .misc import create_union_ast
-from .util import generic_update_ast
 
 
 class VendorLibraryImportException(Exception):
@@ -282,7 +280,12 @@ def post_import_hook_third_party(module: TypeAny) -> None:
 
 
 # TODO: Ugly Code Sandbox
-def bind_ast(lib_name, modules, classes, methods) -> None:
+def bind_ast(
+    lib_name: str,
+    modules: TypeList[TypeTuple[str, TypeAny]],
+    classes: TypeList[TypeTuple[str, str, TypeAny]],
+    methods: TypeList[TypeTuple[str, str]],
+) -> None:
     global lib_ast
 
     # update global first
@@ -290,7 +293,12 @@ def bind_ast(lib_name, modules, classes, methods) -> None:
     lib_ast.syft.add_attr("sandbox", attr=new_lib_ast.sandbox)
 
 
-def dynamic_update_ast(client, modules, classes, methods) -> Globals:
+def dynamic_update_ast(
+    client: Optional[Any],
+    modules: TypeList[TypeTuple[str, TypeAny]],
+    classes: TypeList[TypeTuple[str, str, TypeAny]],
+    methods: TypeList[TypeTuple[str, str]],
+) -> Globals:
     ast = Globals(client)
 
     add_modules(ast, modules)

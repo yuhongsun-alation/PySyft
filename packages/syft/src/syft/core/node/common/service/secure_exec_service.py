@@ -19,7 +19,6 @@ from ..... import serialize
 from .....generate_wrapper import GenerateWrapper
 from .....lib import bind_ast
 from .....logger import debug
-from .....logger import traceback
 from .....proto.core.ast.module_pb2 import AstModule as AstModule_PB
 from .....proto.core.node.common.service.secure_exec_service_pb2 import (
     SecureExecMessage as SecureExecMessage_PB,
@@ -44,11 +43,11 @@ def object2proto(obj: _ast.Module) -> AstModule_PB:
     data = pickle.dumps(obj)
     try:
         del sys.modules["pickle"]
-    except Exception as e:
+    except Exception:
         pass
     try:
         del pickle
-    except Exception as e:
+    except Exception:
         pass
 
     # continue
@@ -62,11 +61,11 @@ def proto2object(proto: AstModule_PB) -> _ast.Module:
     ast_tree = pickle.loads(proto.data)
     try:
         del sys.modules["pickle"]
-    except Exception as e:
+    except Exception:
         pass
     try:
         del pickle
-    except Exception as e:
+    except Exception:
         pass
 
     # continue
@@ -170,8 +169,8 @@ bad_ops = [
 denylist = [ast.Import, ast.ImportFrom]
 
 
-def parse_all_nodes(tree):
-    nodes = []
+def parse_all_nodes(tree: _ast.Module) -> List[Tuple[ast.AST, str]]:
+    nodes: List[Tuple[ast.AST, str]] = []
     for node in ast.walk(tree):
         if isinstance(node, ast.Call):
             call_path = ""
@@ -184,10 +183,10 @@ def parse_all_nodes(tree):
                 nodes.append((node, call_path))
             elif isinstance(node.func, (ast.Attribute)):
                 module = "__file__"
-                call_path = f"{module}.{node.func.value.id}.{node.func.attr}"
+                call_path = f"{module}.{node.func.value.id}.{node.func.attr}"  # type: ignore
                 nodes.append((node, call_path))
             else:
-                raise ("Found a different Call type")
+                raise Exception("Found a different Call type")
         if isinstance(node, ast.Import):
             imports = ",".join([name.name for name in node.names])
             nodes.append((node, f"import {imports}"))
@@ -197,27 +196,28 @@ def parse_all_nodes(tree):
     return nodes
 
 
-def validate_nodes(nodes):
+def validate_nodes(nodes: List[Tuple[ast.AST, str]]) -> bool:
     valid = True
     for (node, desc) in nodes:
         if isinstance(node, (ast.ImportFrom, ast.Import)):
             valid = False
             print(f"WARNING: `{desc}` not allowed {node.lineno}:{node.col_offset}")
         if isinstance(node, (ast.Call)):
-            if desc.startswith("__builtins__") and node.func.id in bad_ops:
+            if desc.startswith("__builtins__") and node.func.id in bad_ops:  # type: ignore
                 valid = False
                 print(
                     f"WARNING: `{desc}()` not allowed {node.lineno}:{node.col_offset}"
                 )
-    # return valid
+
+    _ = valid
     return True
 
 
-def bind_to_global_ast():
+def bind_to_global_ast() -> None:
     # stdlib
     import sys
 
-    sandbox = sys.modules["syft"].sandbox
+    sandbox = sys.modules["syft"].sandbox  # type: ignore
     mylib = sandbox.mylib
     modules: List[Tuple[str, Any]] = [
         ("syft.sandbox", sandbox),
@@ -280,7 +280,6 @@ class SecureExecService(ImmediateNodeServiceWithoutReply):
     ) -> None:
         debug(f"> Executing {type(msg)} {msg.pprint} on {node.pprint}")
 
-        # try:
         print("=============================")
         print("Remote Secure Exec")
         print("=============================")
@@ -295,9 +294,6 @@ class SecureExecService(ImmediateNodeServiceWithoutReply):
             print("Rejecting, code is insecure!")
 
         print("=============================")
-
-        # except Exception as e:
-        #     traceback(e)
 
     @staticmethod
     def message_handler_types() -> List[type]:

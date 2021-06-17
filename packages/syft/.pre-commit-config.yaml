@@ -24,7 +24,7 @@ repos:
         # additional_dependencies:
         # - flake8-kwarger
         # - darglint
-        exclude: ^(packages/syft/src/syft/proto|packages/syft/examples/duet)
+        exclude: ^(packages/syft/src/syft/proto|packages/syft/examples/duet|packages/syft/scripts/astpp.py|packages/syft/scripts/syckle.py)
   - repo: https://github.com/psf/black
     rev: 21.4b0
     hooks:
@@ -34,7 +34,7 @@ repos:
     rev: v0.812
     hooks:
       - id: mypy
-        exclude: ^(packages/syft/src/syft/proto|packages/syft/tests/syft/lib/python|packages/syft/examples/duet)
+        exclude: ^(packages/syft/src/syft/proto|packages/syft/tests/syft/lib/python|packages/syft/examples/duet|packages/syft/scripts/astpp.py|packages/syft/scripts/syckle.py)
         args: [
             "--ignore-missing-imports",
             "--scripts-are-modules",
