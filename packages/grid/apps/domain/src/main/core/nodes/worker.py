@@ -24,7 +24,7 @@ from syft.core.node.domain.domain import Domain
 from syft.grid.client.client import connect
 from syft.grid.client.grid_connection import GridHTTPConnection
 from syft.grid.connections.http_connection import HTTPConnection
-import tenseal as ts
+#import tenseal as ts
 
 # grid relative
 from ..database import db

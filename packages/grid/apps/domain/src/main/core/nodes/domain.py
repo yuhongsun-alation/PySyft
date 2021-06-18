@@ -12,7 +12,7 @@ from flask import current_app as app
 import jwt
 from nacl.signing import SigningKey
 from nacl.signing import VerifyKey
-import pydp
+#import pydp
 import syft as sy
 from syft import serialize
 from syft.core.common.message import SignedImmediateSyftMessageWithReply
@@ -47,7 +47,7 @@ from syft.core.node.device.client import DeviceClient
 from syft.core.node.domain.domain import Domain
 from syft.grid.connections.http_connection import HTTPConnection
 #import sympc
-import tenseal as ts
+#import tenseal as ts
 
 # grid relative
 from ..database import db
