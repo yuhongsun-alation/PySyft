@@ -8,6 +8,7 @@ from typing import Tuple as TypeTuple
 import pycolab
 from pycolab import ascii_art
 from pycolab import engine
+from pycolab import plot
 from pycolab import prefab_parts
 from pycolab import rendering
 from pycolab import things
@@ -17,10 +18,12 @@ from pycolab.prefab_parts import sprites
 # syft relative
 from . import backdrop  # noqa: 401
 from . import drape  # noqa: 401
+from . import enginedirectives  # noqa: 401
 from . import observation  # noqa: 401
 from . import palette  # noqa: 401
 from . import position  # noqa: 401
 from . import sprite  # noqa: 401
+from . import the_plot  # noqa: 401
 from ...ast import add_classes
 from ...ast import add_methods
 from ...ast import add_modules
@@ -43,9 +46,11 @@ def create_ast(client: TypeAny = None) -> Globals:
         ("pycolab.prefab_parts.drapes", drapes),
         ("pycolab.prefab_parts.sprites", sprites),
         ("pycolab.rendering", rendering),
+        ("pycolab.plot", plot),
     ]
 
     classes: TypeList[TypeTuple[str, str, TypeAny]] = [
+        ("pycolab.plot.Plot", "pycolab.plot.Plot", plot.Plot),
         ("pycolab.engine.Engine", "pycolab.engine.Engine", engine.Engine),
         ("pycolab.engine.Palette", "pycolab.engine.Palette", engine.Palette),
         ("pycolab.ascii_art.Partial", "pycolab.ascii_art.Partial", ascii_art.Partial),
@@ -85,6 +90,7 @@ def create_ast(client: TypeAny = None) -> Globals:
         ("pycolab.engine.Engine.rows", "syft.lib.python.Int"),
         ("pycolab.engine.Engine.cols", "syft.lib.python.Int"),
         ("pycolab.engine.Engine.backdrop", "pycolab.things.Backdrop"),
+        ("pycolab.engine.Engine.the_plot", "pycolab.plot.Plot"),
         ("pycolab.things.Backdrop.palette", "pycolab.engine.Palette"),
     ]
 

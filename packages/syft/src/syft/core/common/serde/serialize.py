@@ -45,6 +45,25 @@ def _serialize(
     :rtype: Union[str, bytes, Message]
     """
 
+    # TODO: temp hack
+    if "numpy.int" in str(type(obj)):
+        # syft relative
+        from ....lib import python
+
+        obj = python.util.downcast(int(obj))
+
+    if "numpy.float" in str(type(obj)):
+        # syft relative
+        from ....lib import python
+
+        obj = python.util.downcast(float(obj))
+
+    if "numpy.bool" in str(type(obj)):
+        # syft relative
+        from ....lib import python
+
+        obj = python.util.downcast(bool(obj))
+
     is_serializable: Serializable
     if not isinstance(obj, Serializable):
         if hasattr(obj, "_sy_serializable_wrapper_type"):

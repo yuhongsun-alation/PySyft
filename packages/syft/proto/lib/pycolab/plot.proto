@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+import "proto/lib/python/dict.proto";
+
+package syft.lib.pycolab;
+
+message Plot { syft.lib.python.Dict dict = 1; }

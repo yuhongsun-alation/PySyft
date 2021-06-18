@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+import "proto/lib/python/list.proto";
+
+package syft.lib.pycolab;
+
+message EngineDirectives {
+  syft.lib.python.List z_updates = 1;
+  optional int64 summed_reward = 2;
+  bool game_over = 3;
+  float discount = 4;
+}

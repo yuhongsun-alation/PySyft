@@ -183,14 +183,18 @@ def parse_all_nodes(tree: _ast.Module) -> List[Tuple[ast.AST, str]]:
                 nodes.append((node, call_path))
             elif isinstance(node.func, (ast.Attribute)):
                 module = "__file__"
-                if isinstance(node.func.value, ast.Call):
+                if isinstance(
+                    node.func.value, (ast.Call, ast.Attribute, ast.Subscript)
+                ):
                     # TODO: we need to recurse through these nodes properly
                     pass
                 else:
-                    call_path = f"{module}.{node.func.value.id}.{node.func.attr}"  # type: ignore
-                    nodes.append((node, call_path))
+                    if hasattr(node.func.value, "id"):
+                        call_path = f"{module}.{node.func.value.id}.{node.func.attr}"  # type: ignore
+                        nodes.append((node, call_path))
             else:
-                raise Exception("Found a different Call type")
+                pass
+                # raise Exception("Found a different Call type", type(node.func))
         if isinstance(node, ast.Import):
             imports = ",".join([name.name for name in node.names])
             nodes.append((node, f"import {imports}"))
