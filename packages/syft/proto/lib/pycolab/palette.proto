@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+import "proto/lib/python/set.proto";
+
+package syft.lib.pycolab;
+
+message Palette { syft.lib.python.Set legal_characters = 1; }

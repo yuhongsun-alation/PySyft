@@ -50,6 +50,13 @@ def _serialize(
         if hasattr(obj, "_sy_serializable_wrapper_type"):
             is_serializable = obj._sy_serializable_wrapper_type(value=obj)  # type: ignore
         else:
+            # check the mro
+            mro = type(obj).mro()
+            mro.pop()  # remove Self Class
+            for parent_class in mro:
+                if hasattr(parent_class, "_sy_serializable_wrapper_type"):
+                    is_serializable = parent_class._sy_serializable_wrapper_type(value=obj)  # type: ignore
+
             traceback_and_raise(
                 Exception(
                     f"Object {type(obj)} is not serializable and has no _sy_serializable_wrapper_type"

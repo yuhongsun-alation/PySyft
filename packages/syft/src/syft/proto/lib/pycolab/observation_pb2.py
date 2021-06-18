@@ -19,11 +19,11 @@ from syft.proto.lib.python import dict_pb2 as proto_dot_lib_dot_python_dot_dict_
 
 DESCRIPTOR = _descriptor.FileDescriptor(
     name="proto/lib/pycolab/observation.proto",
-    package="",
+    package="syft.lib.pycolab",
     syntax="proto3",
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
-    serialized_pb=b'\n#proto/lib/pycolab/observation.proto\x1a\x1bproto/lib/numpy/array.proto\x1a\x1bproto/lib/python/dict.proto"_\n\x0bObservation\x12)\n\x05\x62oard\x18\x01 \x01(\x0b\x32\x1a.syft.lib.numpy.NumpyProto\x12%\n\x06layers\x18\x02 \x01(\x0b\x32\x15.syft.lib.python.Dictb\x06proto3',
+    serialized_pb=b'\n#proto/lib/pycolab/observation.proto\x12\x10syft.lib.pycolab\x1a\x1bproto/lib/numpy/array.proto\x1a\x1bproto/lib/python/dict.proto"_\n\x0bObservation\x12)\n\x05\x62oard\x18\x01 \x01(\x0b\x32\x1a.syft.lib.numpy.NumpyProto\x12%\n\x06layers\x18\x02 \x01(\x0b\x32\x15.syft.lib.python.Dictb\x06proto3',
     dependencies=[
         proto_dot_lib_dot_numpy_dot_array__pb2.DESCRIPTOR,
         proto_dot_lib_dot_python_dot_dict__pb2.DESCRIPTOR,
@@ -33,7 +33,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
 
 _OBSERVATION = _descriptor.Descriptor(
     name="Observation",
-    full_name="Observation",
+    full_name="syft.lib.pycolab.Observation",
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
@@ -41,7 +41,7 @@ _OBSERVATION = _descriptor.Descriptor(
     fields=[
         _descriptor.FieldDescriptor(
             name="board",
-            full_name="Observation.board",
+            full_name="syft.lib.pycolab.Observation.board",
             index=0,
             number=1,
             type=11,
@@ -60,7 +60,7 @@ _OBSERVATION = _descriptor.Descriptor(
         ),
         _descriptor.FieldDescriptor(
             name="layers",
-            full_name="Observation.layers",
+            full_name="syft.lib.pycolab.Observation.layers",
             index=1,
             number=2,
             type=11,
@@ -86,8 +86,8 @@ _OBSERVATION = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=97,
-    serialized_end=192,
+    serialized_start=115,
+    serialized_end=210,
 )
 
 _OBSERVATION.fields_by_name[
@@ -105,7 +105,7 @@ Observation = _reflection.GeneratedProtocolMessageType(
     {
         "DESCRIPTOR": _OBSERVATION,
         "__module__": "proto.lib.pycolab.observation_pb2"
-        # @@protoc_insertion_point(class_scope:Observation)
+        # @@protoc_insertion_point(class_scope:syft.lib.pycolab.Observation)
     },
 )
 _sym_db.RegisterMessage(Observation)

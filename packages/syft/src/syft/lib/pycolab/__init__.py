@@ -15,7 +15,11 @@ from pycolab.prefab_parts import drapes
 from pycolab.prefab_parts import sprites
 
 # syft relative
+from . import backdrop  # noqa: 401
+from . import drape  # noqa: 401
 from . import observation  # noqa: 401
+from . import palette  # noqa: 401
+from . import sprite  # noqa: 401
 from ...ast import add_classes
 from ...ast import add_methods
 from ...ast import add_modules
@@ -42,7 +46,9 @@ def create_ast(client: TypeAny = None) -> Globals:
 
     classes: TypeList[TypeTuple[str, str, TypeAny]] = [
         ("pycolab.engine.Engine", "pycolab.engine.Engine", engine.Engine),
+        ("pycolab.engine.Palette", "pycolab.engine.Palette", engine.Palette),
         ("pycolab.ascii_art.Partial", "pycolab.ascii_art.Partial", ascii_art.Partial),
+        ("pycolab.things.Backdrop", "pycolab.things.Backdrop", things.Backdrop),
         ("pycolab.things.Drape", "pycolab.things.Drape", things.Drape),
         ("pycolab.things.Sprite", "pycolab.things.Sprite", things.Sprite),
         (
@@ -69,6 +75,11 @@ def create_ast(client: TypeAny = None) -> Globals:
         ("pycolab.engine.Engine.its_showtime", "syft.lib.python.Tuple"),
         ("pycolab.engine.Engine.play", "syft.lib.python.Tuple"),
         ("pycolab.engine.Engine.game_over", "syft.lib.python.Bool"),
+        ("pycolab.engine.Engine.things", "syft.lib.python.Dict"),
+        ("pycolab.engine.Engine.rows", "syft.lib.python.Int"),
+        ("pycolab.engine.Engine.cols", "syft.lib.python.Int"),
+        ("pycolab.engine.Engine.backdrop", "pycolab.things.Backdrop"),
+        ("pycolab.things.Backdrop.palette", "pycolab.engine.Palette"),
     ]
 
     add_modules(ast, modules)

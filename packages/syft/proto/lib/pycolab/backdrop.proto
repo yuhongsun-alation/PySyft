@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "proto/lib/numpy/array.proto";
+import "proto/lib/pycolab/palette.proto";
+
+package syft.lib.pycolab;
+
+message Backdrop {
+  optional syft.lib.numpy.NumpyProto curtain = 1;
+  optional Palette palette = 2;
+}
