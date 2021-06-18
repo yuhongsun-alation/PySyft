@@ -46,7 +46,7 @@ from ..services.transfer_service import SaveObjectService
 from ..services.transfer_service import TransferObjectService
 from ..services.user_service import UserManagerService
 
-sy.load("tenseal")
+#sy.load("tenseal")
 
 
 class GridWorker(Domain):
