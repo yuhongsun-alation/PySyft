@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "proto/lib/numpy/array.proto";
+import "proto/lib/python/dict.proto";
+
+message Observation {
+  syft.lib.numpy.NumpyProto board = 1;
+  syft.lib.python.Dict layers = 2;
+}

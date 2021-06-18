@@ -9,12 +9,13 @@ import pycolab
 from pycolab import ascii_art
 from pycolab import engine
 from pycolab import prefab_parts
+from pycolab import rendering
 from pycolab import things
 from pycolab.prefab_parts import drapes
 from pycolab.prefab_parts import sprites
 
 # syft relative
-# from . import engine  # noqa: 401
+from . import observation  # noqa: 401
 from ...ast import add_classes
 from ...ast import add_methods
 from ...ast import add_modules
@@ -27,7 +28,7 @@ PACKAGE_SUPPORT = {"lib": LIB_NAME}
 
 def create_ast(client: TypeAny = None) -> Globals:
     ast = Globals(client)
-
+    # pycolab.rendering.Observation
     modules: TypeList[TypeTuple[str, TypeAny]] = [
         ("pycolab", pycolab),
         ("pycolab.engine", engine),
@@ -36,6 +37,7 @@ def create_ast(client: TypeAny = None) -> Globals:
         ("pycolab.prefab_parts", prefab_parts),
         ("pycolab.prefab_parts.drapes", drapes),
         ("pycolab.prefab_parts.sprites", sprites),
+        ("pycolab.rendering", rendering),
     ]
 
     classes: TypeList[TypeTuple[str, str, TypeAny]] = [
@@ -53,12 +55,19 @@ def create_ast(client: TypeAny = None) -> Globals:
             "pycolab.prefab_parts.sprites.MazeWalker",
             sprites.MazeWalker,
         ),
+        (
+            "pycolab.rendering.Observation",
+            "pycolab.rendering.Observation",
+            rendering.Observation,
+        ),
     ]
 
     methods: TypeList[TypeTuple[str, str]] = [
         ("pycolab.ascii_art.ascii_art_to_game", "pycolab.engine.Engine"),
         ("pycolab.things.Drape.update", "syft.lib.python._SyNone"),
         ("pycolab.things.Sprite.update", "syft.lib.python._SyNone"),
+        ("pycolab.engine.Engine.its_showtime", "syft.lib.python.Tuple"),
+        ("pycolab.engine.Engine.play", "syft.lib.python.Tuple"),
     ]
 
     add_modules(ast, modules)

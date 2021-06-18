@@ -9,5 +9,7 @@ import "proto/core/ast/module.proto";
 message SecureExecMessage {
   syft.core.common.UID msg_id = 1;
   syft.core.io.Address address = 2;
-  syft.core.ast.AstModule ast_tree = 3;
+  string entrypoint = 3;
+  string return_type = 4;
+  syft.core.ast.AstModule ast_tree = 5;
 }

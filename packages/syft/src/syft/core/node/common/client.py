@@ -169,8 +169,12 @@ class Client(AbstractNodeClient):
                 Exception("Unable to save client reference without SoloRoute")
             )
 
-    def secure_exec(self, ast_tree: _ast.Module) -> None:
+    def secure_exec(
+        self, entrypoint: str, return_type: str, ast_tree: _ast.Module
+    ) -> None:
         obj_msg = SecureExecMessage(
+            entrypoint=entrypoint,
+            return_type=return_type,
             ast_tree=ast_tree,
             address=self.address,
         )

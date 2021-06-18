@@ -213,27 +213,44 @@ def validate_nodes(nodes: List[Tuple[ast.AST, str]]) -> bool:
     return True
 
 
-def bind_to_global_ast() -> None:
+def sandbox_ast_code(entrypoint: str, tree: _ast.Module) -> None:
+    def sandbox_lambda(*args: Any, **kwargs: Any) -> Any:
+        exec(compile(tree, filename="<ast>", mode="exec"))  # nosec
+        return eval(f"{entrypoint}(*args, **kwargs)")
+
+    # syft absolute
+    import syft
+
+    module_type = type(syft)
+
+    if "sandbox" not in syft.__dict__:
+        syft.__dict__["sandbox"] = module_type(name="sandbox")
+
+    parent = syft.__dict__["sandbox"]
+    sandbox_lambda.__module__ = "syft.sandbox"
+    sandbox_lambda.__name__ = entrypoint
+    parent.__dict__[sandbox_lambda.__name__] = sandbox_lambda
+
+
+def add_entrypoint_ast(entrypoint: str, return_type: str) -> None:
     # stdlib
     import sys
 
     sandbox = sys.modules["syft"].sandbox  # type: ignore
-    mylib = sandbox.mylib
     modules: List[Tuple[str, Any]] = [
         ("syft.sandbox", sandbox),
-        ("syft.sandbox.mylib", mylib),
     ]
 
     classes: List[Tuple[str, str, Any]] = [
-        ("syft.sandbox.mylib.Test", "syft.sandbox.mylib.Test", mylib.Test),
+        #     # ("syft.sandbox.mylib.Test", "syft.sandbox.mylib.Test", mylib.Test),
     ]
 
     methods: List[Tuple[str, str]] = [
-        ("syft.sandbox.mylib.Test.hello", "syft.lib.python.String"),
+        (f"syft.sandbox.{entrypoint}", return_type),
     ]
 
     try:
-        bind_ast("mylib", modules, classes, methods)
+        bind_ast(modules, classes, methods)
     except Exception as e:
         print("failed to bind ast", e)
 
@@ -245,15 +262,21 @@ def bind_to_global_ast() -> None:
 class SecureExecMessage(ImmediateSyftMessageWithoutReply):
     def __init__(
         self,
+        entrypoint: str,
+        return_type: str,
         ast_tree: _ast.Module,
         address: Address,
         msg_id: Optional[UID] = None,
     ):
         super().__init__(address=address, msg_id=msg_id)
+        self.entrypoint = entrypoint
+        self.return_type = return_type
         self.ast_tree = ast_tree
 
     def _object2proto(self) -> SecureExecMessage_PB:
         return SecureExecMessage_PB(
+            entrypoint=self.entrypoint,
+            return_type=self.return_type,
             ast_tree=serialize(self.ast_tree),
             address=serialize(self.address),
             msg_id=serialize(self.id),
@@ -262,6 +285,8 @@ class SecureExecMessage(ImmediateSyftMessageWithoutReply):
     @staticmethod
     def _proto2object(proto: SecureExecMessage_PB) -> SecureExecMessage:
         return SecureExecMessage(
+            entrypoint=proto.entrypoint,
+            return_type=proto.return_type,
             ast_tree=_deserialize(blob=proto.ast_tree),
             address=_deserialize(blob=proto.address),
             msg_id=_deserialize(blob=proto.msg_id),
@@ -286,10 +311,10 @@ class SecureExecService(ImmediateNodeServiceWithoutReply):
         nodes = parse_all_nodes(msg.ast_tree)
         if validate_nodes(nodes):
             print("Compiling...")
-            exec(compile(msg.ast_tree, filename="<ast>", mode="exec"))  # nosec
             print("... compiled!")
-            bind_to_global_ast()
-            print("Accepting, code executed successfully!")
+            sandbox_ast_code(entrypoint=msg.entrypoint, tree=msg.ast_tree)
+            add_entrypoint_ast(entrypoint=msg.entrypoint, return_type=msg.return_type)
+            print("Accepting, code bound at entry point successfully!")
         else:
             print("Rejecting, code is insecure!")
 

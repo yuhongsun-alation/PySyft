@@ -282,7 +282,6 @@ def post_import_hook_third_party(module: TypeAny) -> None:
 
 # TODO: Ugly Code Sandbox
 def bind_ast(
-    lib_name: str,
     modules: TypeList[TypeTuple[str, TypeAny]],
     classes: TypeList[TypeTuple[str, str, TypeAny]],
     methods: TypeList[TypeTuple[str, str]],
