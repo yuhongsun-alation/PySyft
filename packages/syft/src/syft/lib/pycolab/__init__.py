@@ -19,6 +19,7 @@ from . import backdrop  # noqa: 401
 from . import drape  # noqa: 401
 from . import observation  # noqa: 401
 from . import palette  # noqa: 401
+from . import position  # noqa: 401
 from . import sprite  # noqa: 401
 from ...ast import add_classes
 from ...ast import add_methods
@@ -51,6 +52,11 @@ def create_ast(client: TypeAny = None) -> Globals:
         ("pycolab.things.Backdrop", "pycolab.things.Backdrop", things.Backdrop),
         ("pycolab.things.Drape", "pycolab.things.Drape", things.Drape),
         ("pycolab.things.Sprite", "pycolab.things.Sprite", things.Sprite),
+        # (
+        #     "pycolab.things.Sprite.Position",
+        #     "pycolab.things.Sprite.Position",
+        #     things.Sprite.Position,
+        # ),
         (
             "pycolab.prefab_parts.drapes.Scrolly",
             "pycolab.prefab_parts.drapes.Scrolly",

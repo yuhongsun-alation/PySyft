@@ -15,7 +15,9 @@ _sym_db = _symbol_database.Default()
 
 # syft absolute
 from syft.proto.lib.numpy import array_pb2 as proto_dot_lib_dot_numpy_dot_array__pb2
-from syft.proto.lib.python import tuple_pb2 as proto_dot_lib_dot_python_dot_tuple__pb2
+from syft.proto.lib.pycolab import (
+    position_pb2 as proto_dot_lib_dot_pycolab_dot_position__pb2,
+)
 
 DESCRIPTOR = _descriptor.FileDescriptor(
     name="proto/lib/pycolab/sprite.proto",
@@ -23,10 +25,10 @@ DESCRIPTOR = _descriptor.FileDescriptor(
     syntax="proto3",
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
-    serialized_pb=b'\n\x1eproto/lib/pycolab/sprite.proto\x12\x10syft.lib.pycolab\x1a\x1bproto/lib/numpy/array.proto\x1a\x1cproto/lib/python/tuple.proto"\x96\x03\n\x06Sprite\x12\x10\n\x08obj_type\x18\x01 \x01(\t\x12\x16\n\tcharacter\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x14\n\x07visible\x18\x03 \x01(\x08H\x01\x88\x01\x01\x12\x19\n\x0chas_position\x18\x04 \x01(\x08H\x02\x88\x01\x01\x12\x31\n\x08position\x18\x05 \x01(\x0b\x32\x1a.syft.lib.numpy.NumpyProtoH\x03\x88\x01\x01\x12\x17\n\nhas_corner\x18\x06 \x01(\x08H\x04\x88\x01\x01\x12+\n\x06\x63orner\x18\x07 \x01(\x0b\x32\x16.syft.lib.python.TupleH\x05\x88\x01\x01\x12\x18\n\x0bhas_curtain\x18\x08 \x01(\x08H\x06\x88\x01\x01\x12\x30\n\x07\x63urtain\x18\t \x01(\x0b\x32\x1a.syft.lib.numpy.NumpyProtoH\x07\x88\x01\x01\x42\x0c\n\n_characterB\n\n\x08_visibleB\x0f\n\r_has_positionB\x0b\n\t_positionB\r\n\x0b_has_cornerB\t\n\x07_cornerB\x0e\n\x0c_has_curtainB\n\n\x08_curtainb\x06proto3',
+    serialized_pb=b'\n\x1eproto/lib/pycolab/sprite.proto\x12\x10syft.lib.pycolab\x1a\x1bproto/lib/numpy/array.proto\x1a proto/lib/pycolab/position.proto"\x9a\x03\n\x06Sprite\x12\x10\n\x08obj_type\x18\x01 \x01(\t\x12\x16\n\tcharacter\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x14\n\x07visible\x18\x03 \x01(\x08H\x01\x88\x01\x01\x12\x19\n\x0chas_position\x18\x04 \x01(\x08H\x02\x88\x01\x01\x12\x31\n\x08position\x18\x05 \x01(\x0b\x32\x1a.syft.lib.pycolab.PositionH\x03\x88\x01\x01\x12\x17\n\nhas_corner\x18\x06 \x01(\x08H\x04\x88\x01\x01\x12/\n\x06\x63orner\x18\x07 \x01(\x0b\x32\x1a.syft.lib.pycolab.PositionH\x05\x88\x01\x01\x12\x18\n\x0bhas_curtain\x18\x08 \x01(\x08H\x06\x88\x01\x01\x12\x30\n\x07\x63urtain\x18\t \x01(\x0b\x32\x1a.syft.lib.numpy.NumpyProtoH\x07\x88\x01\x01\x42\x0c\n\n_characterB\n\n\x08_visibleB\x0f\n\r_has_positionB\x0b\n\t_positionB\r\n\x0b_has_cornerB\t\n\x07_cornerB\x0e\n\x0c_has_curtainB\n\n\x08_curtainb\x06proto3',
     dependencies=[
         proto_dot_lib_dot_numpy_dot_array__pb2.DESCRIPTOR,
-        proto_dot_lib_dot_python_dot_tuple__pb2.DESCRIPTOR,
+        proto_dot_lib_dot_pycolab_dot_position__pb2.DESCRIPTOR,
     ],
 )
 
@@ -284,16 +286,16 @@ _SPRITE = _descriptor.Descriptor(
             fields=[],
         ),
     ],
-    serialized_start=112,
-    serialized_end=518,
+    serialized_start=116,
+    serialized_end=526,
 )
 
 _SPRITE.fields_by_name[
     "position"
-].message_type = proto_dot_lib_dot_numpy_dot_array__pb2._NUMPYPROTO
+].message_type = proto_dot_lib_dot_pycolab_dot_position__pb2._POSITION
 _SPRITE.fields_by_name[
     "corner"
-].message_type = proto_dot_lib_dot_python_dot_tuple__pb2._TUPLE
+].message_type = proto_dot_lib_dot_pycolab_dot_position__pb2._POSITION
 _SPRITE.fields_by_name[
     "curtain"
 ].message_type = proto_dot_lib_dot_numpy_dot_array__pb2._NUMPYPROTO

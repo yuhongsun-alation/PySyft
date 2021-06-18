@@ -79,7 +79,7 @@ def proto2object(proto: Sprite_PB) -> things.Sprite:
         setattr(thing, get_set_map["position"], deserialize(proto.position))
 
     if proto.has_corner:
-        setattr(thing, get_set_map["corner"], deserialize(proto.corner).upcast())
+        setattr(thing, get_set_map["corner"], deserialize(proto.corner))
 
     return thing
 

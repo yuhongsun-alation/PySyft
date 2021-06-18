@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+import "proto/lib/python/dict.proto";
+
+package syft.lib.pycolab;
+
+message Position { syft.lib.python.Dict position = 1; }

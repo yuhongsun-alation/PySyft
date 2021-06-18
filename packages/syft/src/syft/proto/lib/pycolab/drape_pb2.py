@@ -15,25 +15,27 @@ _sym_db = _symbol_database.Default()
 
 # syft absolute
 from syft.proto.lib.numpy import array_pb2 as proto_dot_lib_dot_numpy_dot_array__pb2
-from syft.proto.lib.python import tuple_pb2 as proto_dot_lib_dot_python_dot_tuple__pb2
+from syft.proto.lib.pycolab import (
+    position_pb2 as proto_dot_lib_dot_pycolab_dot_position__pb2,
+)
 
 DESCRIPTOR = _descriptor.FileDescriptor(
     name="proto/lib/pycolab/drape.proto",
-    package="",
+    package="syft.lib.pycolab",
     syntax="proto3",
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
-    serialized_pb=b'\n\x1dproto/lib/pycolab/drape.proto\x1a\x1bproto/lib/numpy/array.proto\x1a\x1cproto/lib/python/tuple.proto"\x95\x03\n\x05\x44rape\x12\x10\n\x08obj_type\x18\x01 \x01(\t\x12\x16\n\tcharacter\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x14\n\x07visible\x18\x03 \x01(\x08H\x01\x88\x01\x01\x12\x19\n\x0chas_position\x18\x04 \x01(\x08H\x02\x88\x01\x01\x12\x31\n\x08position\x18\x05 \x01(\x0b\x32\x1a.syft.lib.numpy.NumpyProtoH\x03\x88\x01\x01\x12\x17\n\nhas_corner\x18\x06 \x01(\x08H\x04\x88\x01\x01\x12+\n\x06\x63orner\x18\x07 \x01(\x0b\x32\x16.syft.lib.python.TupleH\x05\x88\x01\x01\x12\x18\n\x0bhas_curtain\x18\x08 \x01(\x08H\x06\x88\x01\x01\x12\x30\n\x07\x63urtain\x18\t \x01(\x0b\x32\x1a.syft.lib.numpy.NumpyProtoH\x07\x88\x01\x01\x42\x0c\n\n_characterB\n\n\x08_visibleB\x0f\n\r_has_positionB\x0b\n\t_positionB\r\n\x0b_has_cornerB\t\n\x07_cornerB\x0e\n\x0c_has_curtainB\n\n\x08_curtainb\x06proto3',
+    serialized_pb=b'\n\x1dproto/lib/pycolab/drape.proto\x12\x10syft.lib.pycolab\x1a\x1bproto/lib/numpy/array.proto\x1a proto/lib/pycolab/position.proto"\x99\x03\n\x05\x44rape\x12\x10\n\x08obj_type\x18\x01 \x01(\t\x12\x16\n\tcharacter\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x14\n\x07visible\x18\x03 \x01(\x08H\x01\x88\x01\x01\x12\x19\n\x0chas_position\x18\x04 \x01(\x08H\x02\x88\x01\x01\x12\x31\n\x08position\x18\x05 \x01(\x0b\x32\x1a.syft.lib.pycolab.PositionH\x03\x88\x01\x01\x12\x17\n\nhas_corner\x18\x06 \x01(\x08H\x04\x88\x01\x01\x12/\n\x06\x63orner\x18\x07 \x01(\x0b\x32\x1a.syft.lib.pycolab.PositionH\x05\x88\x01\x01\x12\x18\n\x0bhas_curtain\x18\x08 \x01(\x08H\x06\x88\x01\x01\x12\x30\n\x07\x63urtain\x18\t \x01(\x0b\x32\x1a.syft.lib.numpy.NumpyProtoH\x07\x88\x01\x01\x42\x0c\n\n_characterB\n\n\x08_visibleB\x0f\n\r_has_positionB\x0b\n\t_positionB\r\n\x0b_has_cornerB\t\n\x07_cornerB\x0e\n\x0c_has_curtainB\n\n\x08_curtainb\x06proto3',
     dependencies=[
         proto_dot_lib_dot_numpy_dot_array__pb2.DESCRIPTOR,
-        proto_dot_lib_dot_python_dot_tuple__pb2.DESCRIPTOR,
+        proto_dot_lib_dot_pycolab_dot_position__pb2.DESCRIPTOR,
     ],
 )
 
 
 _DRAPE = _descriptor.Descriptor(
     name="Drape",
-    full_name="Drape",
+    full_name="syft.lib.pycolab.Drape",
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
@@ -41,7 +43,7 @@ _DRAPE = _descriptor.Descriptor(
     fields=[
         _descriptor.FieldDescriptor(
             name="obj_type",
-            full_name="Drape.obj_type",
+            full_name="syft.lib.pycolab.Drape.obj_type",
             index=0,
             number=1,
             type=9,
@@ -60,7 +62,7 @@ _DRAPE = _descriptor.Descriptor(
         ),
         _descriptor.FieldDescriptor(
             name="character",
-            full_name="Drape.character",
+            full_name="syft.lib.pycolab.Drape.character",
             index=1,
             number=2,
             type=9,
@@ -79,7 +81,7 @@ _DRAPE = _descriptor.Descriptor(
         ),
         _descriptor.FieldDescriptor(
             name="visible",
-            full_name="Drape.visible",
+            full_name="syft.lib.pycolab.Drape.visible",
             index=2,
             number=3,
             type=8,
@@ -98,7 +100,7 @@ _DRAPE = _descriptor.Descriptor(
         ),
         _descriptor.FieldDescriptor(
             name="has_position",
-            full_name="Drape.has_position",
+            full_name="syft.lib.pycolab.Drape.has_position",
             index=3,
             number=4,
             type=8,
@@ -117,7 +119,7 @@ _DRAPE = _descriptor.Descriptor(
         ),
         _descriptor.FieldDescriptor(
             name="position",
-            full_name="Drape.position",
+            full_name="syft.lib.pycolab.Drape.position",
             index=4,
             number=5,
             type=11,
@@ -136,7 +138,7 @@ _DRAPE = _descriptor.Descriptor(
         ),
         _descriptor.FieldDescriptor(
             name="has_corner",
-            full_name="Drape.has_corner",
+            full_name="syft.lib.pycolab.Drape.has_corner",
             index=5,
             number=6,
             type=8,
@@ -155,7 +157,7 @@ _DRAPE = _descriptor.Descriptor(
         ),
         _descriptor.FieldDescriptor(
             name="corner",
-            full_name="Drape.corner",
+            full_name="syft.lib.pycolab.Drape.corner",
             index=6,
             number=7,
             type=11,
@@ -174,7 +176,7 @@ _DRAPE = _descriptor.Descriptor(
         ),
         _descriptor.FieldDescriptor(
             name="has_curtain",
-            full_name="Drape.has_curtain",
+            full_name="syft.lib.pycolab.Drape.has_curtain",
             index=7,
             number=8,
             type=8,
@@ -193,7 +195,7 @@ _DRAPE = _descriptor.Descriptor(
         ),
         _descriptor.FieldDescriptor(
             name="curtain",
-            full_name="Drape.curtain",
+            full_name="syft.lib.pycolab.Drape.curtain",
             index=8,
             number=9,
             type=11,
@@ -221,7 +223,7 @@ _DRAPE = _descriptor.Descriptor(
     oneofs=[
         _descriptor.OneofDescriptor(
             name="_character",
-            full_name="Drape._character",
+            full_name="syft.lib.pycolab.Drape._character",
             index=0,
             containing_type=None,
             create_key=_descriptor._internal_create_key,
@@ -229,7 +231,7 @@ _DRAPE = _descriptor.Descriptor(
         ),
         _descriptor.OneofDescriptor(
             name="_visible",
-            full_name="Drape._visible",
+            full_name="syft.lib.pycolab.Drape._visible",
             index=1,
             containing_type=None,
             create_key=_descriptor._internal_create_key,
@@ -237,7 +239,7 @@ _DRAPE = _descriptor.Descriptor(
         ),
         _descriptor.OneofDescriptor(
             name="_has_position",
-            full_name="Drape._has_position",
+            full_name="syft.lib.pycolab.Drape._has_position",
             index=2,
             containing_type=None,
             create_key=_descriptor._internal_create_key,
@@ -245,7 +247,7 @@ _DRAPE = _descriptor.Descriptor(
         ),
         _descriptor.OneofDescriptor(
             name="_position",
-            full_name="Drape._position",
+            full_name="syft.lib.pycolab.Drape._position",
             index=3,
             containing_type=None,
             create_key=_descriptor._internal_create_key,
@@ -253,7 +255,7 @@ _DRAPE = _descriptor.Descriptor(
         ),
         _descriptor.OneofDescriptor(
             name="_has_corner",
-            full_name="Drape._has_corner",
+            full_name="syft.lib.pycolab.Drape._has_corner",
             index=4,
             containing_type=None,
             create_key=_descriptor._internal_create_key,
@@ -261,7 +263,7 @@ _DRAPE = _descriptor.Descriptor(
         ),
         _descriptor.OneofDescriptor(
             name="_corner",
-            full_name="Drape._corner",
+            full_name="syft.lib.pycolab.Drape._corner",
             index=5,
             containing_type=None,
             create_key=_descriptor._internal_create_key,
@@ -269,7 +271,7 @@ _DRAPE = _descriptor.Descriptor(
         ),
         _descriptor.OneofDescriptor(
             name="_has_curtain",
-            full_name="Drape._has_curtain",
+            full_name="syft.lib.pycolab.Drape._has_curtain",
             index=6,
             containing_type=None,
             create_key=_descriptor._internal_create_key,
@@ -277,23 +279,23 @@ _DRAPE = _descriptor.Descriptor(
         ),
         _descriptor.OneofDescriptor(
             name="_curtain",
-            full_name="Drape._curtain",
+            full_name="syft.lib.pycolab.Drape._curtain",
             index=7,
             containing_type=None,
             create_key=_descriptor._internal_create_key,
             fields=[],
         ),
     ],
-    serialized_start=93,
-    serialized_end=498,
+    serialized_start=115,
+    serialized_end=524,
 )
 
 _DRAPE.fields_by_name[
     "position"
-].message_type = proto_dot_lib_dot_numpy_dot_array__pb2._NUMPYPROTO
+].message_type = proto_dot_lib_dot_pycolab_dot_position__pb2._POSITION
 _DRAPE.fields_by_name[
     "corner"
-].message_type = proto_dot_lib_dot_python_dot_tuple__pb2._TUPLE
+].message_type = proto_dot_lib_dot_pycolab_dot_position__pb2._POSITION
 _DRAPE.fields_by_name[
     "curtain"
 ].message_type = proto_dot_lib_dot_numpy_dot_array__pb2._NUMPYPROTO
@@ -334,7 +336,7 @@ Drape = _reflection.GeneratedProtocolMessageType(
     {
         "DESCRIPTOR": _DRAPE,
         "__module__": "proto.lib.pycolab.drape_pb2"
-        # @@protoc_insertion_point(class_scope:Drape)
+        # @@protoc_insertion_point(class_scope:syft.lib.pycolab.Drape)
     },
 )
 _sym_db.RegisterMessage(Drape)

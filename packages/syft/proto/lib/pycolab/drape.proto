@@ -1,16 +1,18 @@
 syntax = "proto3";
 
 import "proto/lib/numpy/array.proto";
-import "proto/lib/python/tuple.proto";
+import "proto/lib/pycolab/position.proto";
+
+package syft.lib.pycolab;
 
 message Drape {
   string obj_type = 1;
   optional string character = 2;
   optional bool visible = 3;
   optional bool has_position = 4;
-  optional syft.lib.numpy.NumpyProto position = 5;
+  optional Position position = 5;
   optional bool has_corner = 6;
-  optional syft.lib.python.Tuple corner = 7;
+  optional Position corner = 7;
   optional bool has_curtain = 8;
   optional syft.lib.numpy.NumpyProto curtain = 9;
 }
