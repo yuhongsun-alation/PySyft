@@ -68,6 +68,7 @@ def create_ast(client: TypeAny = None) -> Globals:
         ("pycolab.things.Sprite.update", "syft.lib.python._SyNone"),
         ("pycolab.engine.Engine.its_showtime", "syft.lib.python.Tuple"),
         ("pycolab.engine.Engine.play", "syft.lib.python.Tuple"),
+        ("pycolab.engine.Engine.game_over", "syft.lib.python.Bool"),
     ]
 
     add_modules(ast, modules)

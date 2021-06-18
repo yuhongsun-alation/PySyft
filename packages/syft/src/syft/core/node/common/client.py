@@ -15,6 +15,7 @@ from nacl.signing import VerifyKey
 import pandas as pd
 
 # syft relative
+from .... import lib
 from .... import serialize
 from ....lib import create_lib_ast
 from ....logger import critical
@@ -45,6 +46,7 @@ from ...pointer.garbage_collection import gc_get_default_strategy
 from ...pointer.pointer import Pointer
 from ..abstract.node import AbstractNodeClient
 from .action.exception_action import ExceptionMessage
+from .action.function_or_constructor_action import RunFunctionOrConstructorAction
 from .service.child_node_lifecycle_service import RegisterChildNodeMessage
 
 
@@ -172,6 +174,7 @@ class Client(AbstractNodeClient):
     def secure_exec(
         self, entrypoint: str, return_type: str, ast_tree: _ast.Module
     ) -> None:
+        # for creating secure_exec entrypoints
         obj_msg = SecureExecMessage(
             entrypoint=entrypoint,
             return_type=return_type,
@@ -180,6 +183,30 @@ class Client(AbstractNodeClient):
         )
 
         self.send_immediate_msg_without_reply(msg=obj_msg)
+
+    def run(self, entrypoint: str, return_type: str) -> Pointer:
+        # for running secure_exec entrypoints
+        pointer_id = UID()
+        ref = lib.lib_ast.query(return_type)
+        ptr_type = ref.pointer_type  # type: ignore
+        ptr = ptr_type(
+            client=self,
+            id_at_location=pointer_id,
+            object_type=return_type,
+        )
+
+        action = RunFunctionOrConstructorAction(
+            path=f"syft.sandbox.{entrypoint}",
+            args=tuple(),
+            kwargs={},
+            id_at_location=pointer_id,
+            address=self.address,
+            msg_id=UID(),
+        )
+
+        self.send_immediate_msg_without_reply(msg=action)
+
+        return ptr
 
     def register(self, client: AbstractNodeClient) -> None:
         debug(f"> Registering {client.pprint} with {self.pprint}")
