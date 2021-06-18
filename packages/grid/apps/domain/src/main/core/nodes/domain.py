@@ -71,9 +71,9 @@ from ..services.tensor_service import RegisterTensorService
 from ..services.transfer_service import TransferObjectService
 from ..services.user_service import UserManagerService
 
-sy.load("tenseal")
-sy.load("sympc")
-sy.load("pydp")
+#sy.load("tenseal")
+#sy.load("sympc")
+#sy.load("pydp")
 
 
 class GridDomain(Domain):
