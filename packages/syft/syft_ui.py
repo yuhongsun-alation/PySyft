@@ -25,6 +25,7 @@ import copy
 import curses
 import datetime
 import textwrap
+import time
 
 # third party
 from pycolab import cropping
@@ -301,7 +302,10 @@ class CursesUi(object):
 
         # Kick off the game---get first observation, crop and repaint as needed,
         # initialise our total return, and display the first frame.
-        observation, reward, _ = resolve(self._game.its_showtime())
+        # observation, reward, _ = resolve(self._game.its_showtime())
+        tuple_ptr = self._game.its_showtime()
+        observation = tuple_ptr[0]
+        reward = tuple_ptr[1]
         observation = observation.get(request_block=True)
         reward = reward.get(request_block=True)
         if "SyNone" in str(type(reward)):
@@ -334,7 +338,10 @@ class CursesUi(object):
                 # Receive a new observation, reward, discount; crop and repaint; update
                 # total return.
                 action = self._keycodes_to_actions[keycode]
-                observation, reward, _ = resolve(self._game.play(action))
+                # observation, reward, _ = resolve(self._game.play(action))
+                tuple_ptr = self._game.play(action)
+                observation = tuple_ptr[0]
+                reward = tuple_ptr[1]
                 observation = observation.get(request_block=True)
                 reward = reward.get(request_block=True)
                 if "SyNone" in str(type(reward)):
