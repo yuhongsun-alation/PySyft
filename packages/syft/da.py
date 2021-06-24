@@ -59,14 +59,12 @@ class ProxyEngine:
         self.engine_ptr = engine
 
     def __getattribute__(self, key: str) -> Any:
-        # print("trying to get ", key)
         if key == "engine_ptr":
             return super().__getattribute__(key)
         else:
             attr = self.engine_ptr.__getattribute__(key)
-            # print("what", attr, type(attr))
             if "Pointer" in type(attr).__name__:
-                return attr.get(request_block=True)
+                return attr.get()
             return attr
 
 
@@ -77,7 +75,11 @@ loop = asyncio.get_event_loop()
 task = loop.create_task(asyncio.sleep(2))
 loop.run_until_complete(task)
 
-game_ptr = duet.run(entrypoint="make_game", return_type="pycolab.engine.Engine")
+int_ptr = duet.python.Int(0)  # gives us permission as creator of the game
+int_ptr.gc_enabled = False
+game_ptr = duet.run(
+    entrypoint="make_game", return_type="pycolab.engine.Engine", args=int_ptr
+)
 game_ptr.gc_enabled = False
 proxy_game = ProxyEngine(game_ptr)
 ui.play(proxy_game)

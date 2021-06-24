@@ -184,7 +184,7 @@ class Client(AbstractNodeClient):
 
         self.send_immediate_msg_without_reply(msg=obj_msg)
 
-    def run(self, entrypoint: str, return_type: str) -> Pointer:
+    def run(self, entrypoint: str, return_type: str, args=(), kwargs={}) -> Pointer:
         # for running secure_exec entrypoints
         pointer_id = UID()
         ref = lib.lib_ast.query(return_type)
@@ -197,8 +197,8 @@ class Client(AbstractNodeClient):
 
         action = RunFunctionOrConstructorAction(
             path=f"syft.sandbox.{entrypoint}",
-            args=tuple(),
-            kwargs={},
+            args=args,
+            kwargs=kwargs,
             id_at_location=pointer_id,
             address=self.address,
             msg_id=UID(),
