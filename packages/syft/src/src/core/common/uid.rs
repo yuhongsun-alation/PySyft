@@ -6,6 +6,7 @@ use pyo3::prelude::*;
 use pyo3::PyObjectProtocol;
 use std::str::FromStr;
 use uuid::Uuid;
+use std::convert::TryInto;
 
 #[pyclass]
 #[derive(Copy, Clone)]

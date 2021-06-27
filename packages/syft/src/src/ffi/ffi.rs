@@ -2,9 +2,8 @@ use pyo3::prelude::*;
 use pyo3::types::{PyBytes, PyUnicode};
 use pyo3::{wrap_pyfunction, wrap_pymodule};
 use std::thread;
-// use syft_core::capabilities::message::SyftMessage;
-use syft_core::capabilities::message::DataMessage;
-use syft_core::worker::{add_capability, start_on_runtime, Callable, Callback};
+use syft_core::core::capabilities::message::DataMessage;
+use syft_core::core::worker::{add_capability, start_on_runtime, Callable, Callback};
 
 // the module will be syft but with a mixed python project it becomes syft.syft
 // so this needs to be re-exported from a __init__.py file with: from .syft import *
@@ -104,14 +103,14 @@ fn register(py_capability_name: &PyUnicode, py_callback: &PyAny) -> PyResult<()>
 #[pyfunction]
 pub fn connect(target_addr: &PyUnicode) -> PyResult<()> {
     let addr: String = target_addr.extract()?;
-    syft_core::client::connect(addr);
+    syft_core::core::client::connect(addr);
     Ok(())
 }
 
 #[pyfunction]
 pub fn request_capabilities(target_addr: &PyUnicode) -> PyResult<Vec<String>> {
     let addr: String = target_addr.extract()?;
-    let response = syft_core::client::request_capabilities(addr);
+    let response = syft_core::core::client::request_capabilities(addr);
     match response {
         Ok(caps) => Ok(caps),
         Err(_err) => Err(PyErr::new::<pyo3::exceptions::PyException, _>(
@@ -124,7 +123,7 @@ pub fn request_capabilities(target_addr: &PyUnicode) -> PyResult<Vec<String>> {
 pub fn say_hello(target_addr: &PyUnicode, name: &PyUnicode) -> PyResult<String> {
     let addr: String = target_addr.extract()?;
     let name: String = name.extract()?;
-    let result = syft_core::client::say_hello(addr, name).into();
+    let result = syft_core::core::client::say_hello(addr, name).into();
     Ok(result)
 }
 
@@ -138,7 +137,7 @@ fn run_class_method_message(
     request = from_bytes(py_bytes.as_bytes()).expect("Rust Failed to decode message");
 
     let addr: String = target_addr.extract()?;
-    let response = syft_core::client::run_class_method_message(addr, request);
+    let response = syft_core::core::client::run_class_method_message(addr, request);
 
     // serialize
     match response {

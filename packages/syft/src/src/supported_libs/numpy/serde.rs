@@ -3,6 +3,7 @@ use syft_core::proto::util::DataMessage;
 use numpy::npyffi::npy_float;
 use pyo3::prelude::*;
 use pyo3::PyResult;
+use prost::Message;
 
 //adapt this to the current Serializable Trait
 #[pyfunction]
