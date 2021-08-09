@@ -197,12 +197,12 @@ class GetRequestMessage(ImmediateSyftMessageWithReply):
     def __init__(
         self,
         address: Address,
-        content: Dict,
+        request_id: str,
         reply_to: Address,
         msg_id: Optional[UID] = None,
     ):
         super().__init__(address=address, msg_id=msg_id, reply_to=reply_to)
-        self.content = content
+        self.request_id = request_id
 
     def _object2proto(self) -> GetRequestMessage_PB:
         """Returns a protobuf serialization of self.
@@ -219,7 +219,7 @@ class GetRequestMessage(ImmediateSyftMessageWithReply):
         return GetRequestMessage_PB(
             msg_id=serialize(self.id),
             address=serialize(self.address),
-            content=json.dumps(self.content),
+            request_id=json.dumps(self.request_id),
             reply_to=serialize(self.reply_to),
         )
 
@@ -240,7 +240,7 @@ class GetRequestMessage(ImmediateSyftMessageWithReply):
         return GetRequestMessage(
             msg_id=_deserialize(blob=proto.msg_id),
             address=_deserialize(blob=proto.address),
-            content=json.loads(proto.content),
+            request_id=json.loads(proto.request_id),
             reply_to=_deserialize(blob=proto.reply_to),
         )
 
@@ -269,12 +269,12 @@ class GetRequestResponse(ImmediateSyftMessageWithoutReply):
         self,
         address: Address,
         status_code: int,
-        content: Dict,
+        request_id: str,
         msg_id: Optional[UID] = None,
     ):
         super().__init__(address=address, msg_id=msg_id)
         self.status_code = status_code
-        self.content = content
+        self.request_id = request_id
 
     def _object2proto(self) -> GetRequestResponse_PB:
         """Returns a protobuf serialization of self.
@@ -292,7 +292,7 @@ class GetRequestResponse(ImmediateSyftMessageWithoutReply):
             msg_id=serialize(self.id),
             address=serialize(self.address),
             status_code=self.status_code,
-            content=json.dumps(self.content),
+            request_id=json.dumps(self.request_id),
         )
 
     @staticmethod
@@ -313,7 +313,7 @@ class GetRequestResponse(ImmediateSyftMessageWithoutReply):
             msg_id=_deserialize(blob=proto.msg_id),
             address=_deserialize(blob=proto.address),
             status_code=proto.status_code,
-            content=json.loads(proto.content),
+            request_id=json.loads(proto.request_id),
         )
 
     @staticmethod
@@ -482,12 +482,12 @@ class UpdateRequestMessage(ImmediateSyftMessageWithReply):
     def __init__(
         self,
         address: Address,
-        content: Dict,
+        request_id: str,
         reply_to: Address,
         msg_id: Optional[UID] = None,
     ):
         super().__init__(address=address, msg_id=msg_id, reply_to=reply_to)
-        self.content = content
+        self.request_id = request_id
 
     def _object2proto(self) -> UpdateRequestMessage_PB:
         """Returns a protobuf serialization of self.
@@ -504,7 +504,7 @@ class UpdateRequestMessage(ImmediateSyftMessageWithReply):
         return UpdateRequestMessage_PB(
             msg_id=serialize(self.id),
             address=serialize(self.address),
-            content=json.dumps(self.content),
+            request_id=json.dumps(self.request_id),
             reply_to=serialize(self.reply_to),
         )
 
@@ -525,7 +525,7 @@ class UpdateRequestMessage(ImmediateSyftMessageWithReply):
         return UpdateRequestMessage(
             msg_id=_deserialize(blob=proto.msg_id),
             address=_deserialize(blob=proto.address),
-            content=json.loads(proto.content),
+            request_id=json.loads(proto.request_id),
             reply_to=_deserialize(blob=proto.reply_to),
         )
 
@@ -554,12 +554,12 @@ class UpdateRequestResponse(ImmediateSyftMessageWithoutReply):
         self,
         address: Address,
         status_code: int,
-        content: Dict,
+        status: str,
         msg_id: Optional[UID] = None,
     ):
         super().__init__(address=address, msg_id=msg_id)
         self.status_code = status_code
-        self.content = content
+        self.status = status 
 
     def _object2proto(self) -> UpdateRequestResponse_PB:
         """Returns a protobuf serialization of self.
@@ -577,7 +577,7 @@ class UpdateRequestResponse(ImmediateSyftMessageWithoutReply):
             msg_id=serialize(self.id),
             address=serialize(self.address),
             status_code=self.status_code,
-            content=json.dumps(self.content),
+            status=json.dumps(self.status),
         )
 
     @staticmethod
@@ -598,7 +598,7 @@ class UpdateRequestResponse(ImmediateSyftMessageWithoutReply):
             msg_id=_deserialize(blob=proto.msg_id),
             address=_deserialize(blob=proto.address),
             status_code=proto.status_code,
-            content=json.loads(proto.content),
+            status=json.loads(proto.status),
         )
 
     @staticmethod
@@ -625,12 +625,12 @@ class DeleteRequestMessage(ImmediateSyftMessageWithReply):
     def __init__(
         self,
         address: Address,
-        content: Dict,
+        request_id: str,
         reply_to: Address,
         msg_id: Optional[UID] = None,
     ):
         super().__init__(address=address, msg_id=msg_id, reply_to=reply_to)
-        self.content = content
+        self.request_id = request_id
 
     def _object2proto(self) -> DeleteRequestMessage_PB:
         """Returns a protobuf serialization of self.
@@ -647,7 +647,7 @@ class DeleteRequestMessage(ImmediateSyftMessageWithReply):
         return DeleteRequestMessage_PB(
             msg_id=serialize(self.id),
             address=serialize(self.address),
-            content=json.dumps(self.content),
+            request_id=json.dumps(self.request_id),
             reply_to=serialize(self.reply_to),
         )
 
@@ -668,7 +668,7 @@ class DeleteRequestMessage(ImmediateSyftMessageWithReply):
         return DeleteRequestMessage(
             msg_id=_deserialize(blob=proto.msg_id),
             address=_deserialize(blob=proto.address),
-            content=json.loads(proto.content),
+            request_id=json.loads(proto.request_id),
             reply_to=_deserialize(blob=proto.reply_to),
         )
 
@@ -697,12 +697,12 @@ class DeleteRequestResponse(ImmediateSyftMessageWithoutReply):
         self,
         address: Address,
         status_code: int,
-        content: Dict,
+        request_id: str,
         msg_id: Optional[UID] = None,
     ):
         super().__init__(address=address, msg_id=msg_id)
         self.status_code = status_code
-        self.content = content
+        self.request_id = request_id
 
     def _object2proto(self) -> DeleteRequestResponse_PB:
         """Returns a protobuf serialization of self.
@@ -720,7 +720,7 @@ class DeleteRequestResponse(ImmediateSyftMessageWithoutReply):
             msg_id=serialize(self.id),
             address=serialize(self.address),
             status_code=self.status_code,
-            content=json.dumps(self.content),
+            request_id=json.dumps(self.request_id),
         )
 
     @staticmethod
@@ -741,7 +741,7 @@ class DeleteRequestResponse(ImmediateSyftMessageWithoutReply):
             msg_id=_deserialize(blob=proto.msg_id),
             address=_deserialize(blob=proto.address),
             status_code=proto.status_code,
-            content=json.loads(proto.content),
+            request_id=json.loads(proto.request_id),
         )
 
     @staticmethod
