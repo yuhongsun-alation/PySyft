@@ -24,6 +24,7 @@ from syft.core.node.common.node_service.node_service import (
 from syft.core.node.common.node_service.node_service import (
     ImmediateNodeServiceWithoutReply,
 )
+from syft.lib.python import List as SyftList
 from syft.util import validate_type
 
 # relative
@@ -169,30 +170,21 @@ def get_all_request_msg(
     node: AbstractNode,
     verify_key: VerifyKey,
 ) -> GetRequestsResponse:
-
-    # Get Payload Content
-    current_user_id = msg.content.get("current_user", None)
-
     users = node.users
-
-    if not current_user_id:
-        current_user_id = users.first(
-            verify_key=verify_key.encode(encoder=HexEncoder).decode("utf-8")
-        ).id
-
+    current_user_id = users.first(
+        verify_key=verify_key.encode(encoder=HexEncoder).decode("utf-8")
+    ).id
     allowed = users.can_triage_requests(verify_key=verify_key)
 
     if allowed:
-        requests = node.data_requests
-        requests = requests.all()
-        requests_json = [model_to_json(requests) for requests in requests]
+        requests = node.data_requests.all()
+        requests_json = [model_to_json(request) for request in requests]
     else:
         raise AuthorizationError("You're not allowed to get Request information!")
-
     return GetRequestsResponse(
-        address=msg.reply_to,
         status_code=200,
-        content=requests_json,
+        address=msg.reply_to,
+        content=SyftList(requests_json),
     )
 
 
