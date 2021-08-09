@@ -555,11 +555,13 @@ class UpdateRequestResponse(ImmediateSyftMessageWithoutReply):
         address: Address,
         status_code: int,
         status: str,
+        request_id: str,
         msg_id: Optional[UID] = None,
     ):
         super().__init__(address=address, msg_id=msg_id)
         self.status_code = status_code
         self.status = status 
+        self.request_id = request_id
 
     def _object2proto(self) -> UpdateRequestResponse_PB:
         """Returns a protobuf serialization of self.
@@ -578,6 +580,7 @@ class UpdateRequestResponse(ImmediateSyftMessageWithoutReply):
             address=serialize(self.address),
             status_code=self.status_code,
             status=json.dumps(self.status),
+            request_id=json.dumps(self.request_id)
         )
 
     @staticmethod
@@ -598,6 +601,7 @@ class UpdateRequestResponse(ImmediateSyftMessageWithoutReply):
             msg_id=_deserialize(blob=proto.msg_id),
             address=_deserialize(blob=proto.address),
             status_code=proto.status_code,
+            request_id=json.loads(proto.request_id),
             status=json.loads(proto.status),
         )
 

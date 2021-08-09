@@ -171,9 +171,7 @@ def get_all_request_msg(
     verify_key: VerifyKey,
 ) -> GetRequestsResponse:
     users = node.users
-    current_user_id = users.first(
-        verify_key=verify_key.encode(encoder=HexEncoder).decode("utf-8")
-    ).id
+    
     allowed = users.can_triage_requests(verify_key=verify_key)
 
     if allowed:
@@ -189,22 +187,15 @@ def get_all_request_msg(
 
 
 def update_request_msg(
-    msg: DeleteRequestMessage,
+    msg: UpdateRequestMessage,
     node: AbstractNode,
     verify_key: VerifyKey,
 ) -> DeleteRequestResponse:
 
     # Get Payload Content
-    request_id = msg.content.get("request_id", None)
-    status = msg.content.get("status", None)
-    current_user_id = msg.content.get("current_user", None)
-
+    request_id = msg.request_id.get("request_id", None)
+    status = msg.status.get("status", None)
     users = node.users
-
-    if not current_user_id:
-        current_user_id = users.first(
-            verify_key=verify_key.encode(encoder=HexEncoder).decode("utf-8")
-        ).id
 
     # Check if status field is empty
     missing_paramaters = not status
@@ -252,16 +243,12 @@ def del_request_msg(
     verify_key: VerifyKey,
 ) -> DeleteRequestResponse:
 
-    # Get Payload Content
-    request_id = msg.content.get("request_id", None)
-    current_user_id = msg.content.get("current_user", None)
+    request_id = msg.request_id.get("request_id", None)
 
+    current_user_id = users.first(
+        verify_key=verify_key.encode(encoder=HexEncoder).decode("utf-8")
+    ).id
     users = node.users
-
-    if not current_user_id:
-        current_user_id = users.first(
-            verify_key=verify_key.encode(encoder=HexEncoder).decode("utf-8")
-        ).id
 
     requests = node.data_requests
     request = requests.first(id=request_id)
