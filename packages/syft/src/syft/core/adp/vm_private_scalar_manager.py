@@ -1,3 +1,11 @@
+"""
+TODO:
+- Combine PrimeFactory and VirtualMachinePrivateScalarManager
+next()
+- Find out if GammaScalar is redundant
+"""
+
+
 # third party
 import sympy as sp
 

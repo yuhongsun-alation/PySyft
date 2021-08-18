@@ -1,3 +1,10 @@
+"""
+Would be nice:
+- Making sure that epsilon
+
+"""
+
+
 # stdlib
 from functools import lru_cache
 from typing import Any
@@ -32,6 +39,8 @@ from .entity import Entity
 # in the name string instead we could extract them at the point of use instead of lookup
 # TypeDict[str, Union[PhiScalar, GammaScalar]]
 ssid2obj: TypeDict[str, Any] = {}  # TODO: Fix types in circular deps
+## TODO: Make sure ssid2obj is added to serde so that it's serializable for distributed computing.
+## BONUS: Get rid of ssid2obj all together.
 
 
 class GetSymbolsMapper(WalkMapper):
@@ -200,7 +209,7 @@ def max_lipschitz_wrt_entity(scalars: Any, entity: Entity) -> float:
 def max_lipschitz_via_jacobian(
     scalars: TypeList[Any],  # TODO: Fix Scalar type circular
     input_entity: Optional[Entity] = None,
-    data_dependent: bool = True,
+    data_dependent: bool = True,  # this is why epsilon is private
     force_all_searches: bool = False,
     try_hessian_shortcut: bool = False,
 ) -> TypeTuple[TypeList[float], Any]:
