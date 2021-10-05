@@ -1056,6 +1056,23 @@ class SingleEntityPhiTensor(PassthroughTensor, AutogradTensorAncestor, ADPTensor
             scalar_manager=self.scalar_manager,
         )
 
+
+    def std(self, axis: Optional[int] = None, *args: Any, **kwargs: Any) -> SingleEntityPhiTensor:
+
+        data = np.std(self.child, axis=axis, *args, **kwargs)
+        min_vals = np.std(self.min_vals, axis=axis, *args, **kwargs)
+        max_vals = np.std(self.max_vals, axis=axis, *args, **kwargs)
+        entity = self.entity
+
+        return SingleEntityPhiTensor(
+            child=data,
+            entity=entity,
+            min_vals=min_vals,
+            max_vals=max_vals,
+            scalar_manager=self.scalar_manager,
+        )
+
+
     def sum(self, *args: Any, **kwargs: Any) -> SingleEntityPhiTensor:
 
         data = self.child.sum(*args, **kwargs)
