@@ -1056,23 +1056,6 @@ class SingleEntityPhiTensor(PassthroughTensor, AutogradTensorAncestor, ADPTensor
             scalar_manager=self.scalar_manager,
         )
 
-
-    def std(self, axis: Optional[int] = None, *args: Any, **kwargs: Any) -> SingleEntityPhiTensor:
-
-        data = np.std(self.child, axis=axis, *args, **kwargs)
-        min_vals = np.std(self.min_vals, axis=axis, *args, **kwargs)
-        max_vals = np.std(self.max_vals, axis=axis, *args, **kwargs)
-        entity = self.entity
-
-        return SingleEntityPhiTensor(
-            child=data,
-            entity=entity,
-            min_vals=min_vals,
-            max_vals=max_vals,
-            scalar_manager=self.scalar_manager,
-        )
-
-
     def sum(self, *args: Any, **kwargs: Any) -> SingleEntityPhiTensor:
 
         data = self.child.sum(*args, **kwargs)
@@ -1183,6 +1166,7 @@ class SingleEntityPhiTensor(PassthroughTensor, AutogradTensorAncestor, ADPTensor
             max_vals=max_vals,
             scalar_manager=self.scalar_manager,
         )
+
 
     def __le__(self, other: SupportedChainType) -> SingleEntityPhiTensor:
 
@@ -1434,6 +1418,64 @@ def mean(*args: Any, **kwargs: Any) -> SingleEntityPhiTensor:
     args, kwargs = inputs2child(*args, **kwargs)  # type: ignore
 
     data = np.mean(args, **kwargs)
+
+    return SingleEntityPhiTensor(
+        child=data,
+        entity=entity,
+        min_vals=min_vals,
+        max_vals=max_vals,
+        scalar_manager=scalar_manager,
+    )
+
+@implements(SingleEntityPhiTensor, np.std)
+def std(*args: Any, **kwargs: Any) -> SingleEntityPhiTensor:
+
+    entity = args[0].entity
+    scalar_manager = args[0].scalar_manager
+
+    for arg in args[1:]:
+        if not isinstance(arg, SingleEntityPhiTensor):
+            raise Exception("Can only call np.std on objects of the same type.")
+
+        if arg.entity != entity:
+            return NotImplemented
+
+    min_vals = np.mean([0. for x in args], **kwargs)
+    max_vals = np.max(x.max_vals - x.min_vals, **kwargs) * 0.5)
+    # assert max_range >= min_vals
+
+    args, kwargs = inputs2child(*args, **kwargs)  # type: ignore
+
+    data = np.std(args, **kwargs)
+
+    return SingleEntityPhiTensor(
+        child=data,
+        entity=entity,
+        min_vals=min_vals,
+        max_vals=max_vals,
+        scalar_manager=scalar_manager,
+    )
+
+@implements(SingleEntityPhiTensor, np.var)
+def var(*args: Any, **kwargs: Any) -> SingleEntityPhiTensor:
+
+    entity = args[0].entity
+    scalar_manager = args[0].scalar_manager
+
+    for arg in args[1:]:
+        if not isinstance(arg, SingleEntityPhiTensor):
+            raise Exception("Can only call np.var on objects of the same type.")
+
+        if arg.entity != entity:
+            return NotImplemented
+            
+    min_vals = np.mean([0. for x in args], **kwargs)
+    max_vals = np.max(x.max_vals - x.min_vals, **kwargs) * 0.5) ** 2
+    # assert max_range >= min_vals
+
+    args, kwargs = inputs2child(*args, **kwargs)  # type: ignore
+
+    data = np.var(args, **kwargs)
 
     return SingleEntityPhiTensor(
         child=data,
