@@ -781,3 +781,40 @@ def test_clip(
         assert (i.child == rand1).all()
     for i in clipped_tensor3:
         assert (i.child >= rand1).all()
+
+
+def test_sort(row_data_trask: List) -> None:
+    tensor = REPT(rows=row_data_trask)
+    tensor_sort = tensor.sort()
+    for i in range(len(tensor)):
+        assert tensor.child[i].child.sort() == tensor_sort.child[i].child
+
+
+def test_argsort(row_data_trask: List) -> None:
+    tensor = REPT(rows=row_data_trask)
+    tensor_argsort = tensor.argsort()
+    for i in range(len(tensor)):
+        assert (tensor.child[i].child.argsort() == tensor_argsort.child[i].child).all()
+
+
+def test_lshift(row_data_trask: List, highest: int) -> None:
+    tensor = REPT(rows=row_data_trask)
+    shift = np.random.randint(1, highest)
+    tensor_lshift = tensor << shift
+    for i in range(len(tensor)):
+        assert (tensor.child[i].child << shift == tensor_lshift.child[i].child).all()
+
+
+def test_rshift(row_data_trask: List, highest: int) -> None:
+    tensor = REPT(rows=row_data_trask)
+    shift = np.random.randint(1, highest)
+    tensor_lshift = tensor >> shift
+    for i in range(len(tensor)):
+        assert (tensor.child[i].child >> shift == tensor_lshift.child[i].child).all()
+
+
+def test_xor(row_data_trask: List, highest: int) -> None:
+    tensor = REPT(rows=row_data_trask)
+    tensor_xor = tensor ^ False
+    for i in range(len(tensor)):
+        assert ((tensor.child[i].child ^ False) == tensor_xor.child[i].child).all()

@@ -1379,6 +1379,111 @@ class SingleEntityPhiTensor(PassthroughTensor, AutogradTensorAncestor, ADPTensor
             scalar_manager=self.scalar_manager,
         )
 
+    def sort(
+        self,
+        axis: Optional[int] = -1,
+        kind: Optional[str] = None,
+        order: Optional[str] = None,
+    ) -> SingleEntityPhiTensor:
+        """Return a sorted copy of the tensor."""
+        data = self.child.sort(axis, kind, order)
+        min_vals = self.min_vals.sort(axis, kind, order)
+        max_vals = self.max_vals.sort(axis, kind, order)
+
+        return SingleEntityPhiTensor(
+            child=data,
+            entity=self.entity,
+            min_vals=min_vals,
+            max_vals=max_vals,
+            scalar_manager=self.scalar_manager,
+        )
+
+    def argsort(
+        self,
+        axis: Optional[int] = -1,
+        kind: Optional[str] = None,
+        order: Optional[str] = None,
+    ) -> SingleEntityPhiTensor:
+        """Returns the indices that would sort the tensor."""
+        data = self.child.argsort(axis, kind, order)
+        min_vals = np.zeros_like(self.child)
+        max_vals = np.full_like(self.child, self.max_vals.size - 1)
+
+        return SingleEntityPhiTensor(
+            child=data,
+            entity=self.entity,
+            min_vals=min_vals,
+            max_vals=max_vals,
+            scalar_manager=self.scalar_manager,
+        )
+
+    def __lshift__(
+        self,
+        other: SupportedChainType,
+    ) -> SingleEntityPhiTensor:
+        """Shift the bits of an integer to the left."""
+
+        if is_acceptable_simple_type(other):
+            data = self.child << other
+            min_vals = self.min_vals << other
+            max_vals = self.max_vals << other
+        elif isinstance(other, SingleEntityPhiTensor):
+            if self.entity == other.entity:
+                data = self.child << other.child
+                min_vals = self.min_vals << other.child
+                max_vals = self.max_vals << other.child
+            else:
+                # return convert_to_gamma_tensor(self) << convert_to_gamma_tensor(other)
+                raise NotImplementedError
+        else:
+            raise NotImplementedError
+
+        return SingleEntityPhiTensor(
+            child=data,
+            entity=self.entity,
+            min_vals=min_vals,
+            max_vals=max_vals,
+            scalar_manager=self.scalar_manager,
+        )
+
+    def __rshift__(
+        self,
+        other: SupportedChainType,
+    ) -> SingleEntityPhiTensor:
+        """Shift the bits of an integer to the right."""
+
+        if is_acceptable_simple_type(other):
+            data = self.child >> other
+            min_vals = self.min_vals >> other
+            max_vals = self.max_vals >> other
+        elif isinstance(other, SingleEntityPhiTensor):
+            if self.entity == other.entity:
+                data = self.child >> other.child
+                min_vals = self.min_vals >> other.child
+                max_vals = self.max_vals >> other.child
+            else:
+                # return convert_to_gamma_tensor(self) >> convert_to_gamma_tensor(other)
+                raise NotImplementedError
+        else:
+            raise NotImplementedError
+
+        return SingleEntityPhiTensor(
+            child=data,
+            entity=self.entity,
+            min_vals=min_vals,
+            max_vals=max_vals,
+            scalar_manager=self.scalar_manager,
+        )
+
+    def __xor__(self, other: Any) -> SingleEntityPhiTensor:
+        """Compute the bit-wise XOR of SEPT with another tensor/array/integer element-wise."""
+        return SingleEntityPhiTensor(
+            child=self.child ^ other,
+            min_vals=np.zeros_like(self.child),
+            max_vals=np.zeros_like(self.child),
+            entity=self.entity,
+        )
+
 
 @implements(SingleEntityPhiTensor, np.expand_dims)
 def expand_dims(a: npt.ArrayLike, axis: Optional[int] = None) -> SingleEntityPhiTensor:

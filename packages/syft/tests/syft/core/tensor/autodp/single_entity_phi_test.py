@@ -1375,3 +1375,80 @@ def test_clip(tensor1: SEPT) -> None:
     assert ((clipped_tensor1 >= rand1) & (clipped_tensor1 <= rand2)).all()
     assert (clipped_tensor2 == rand1).all()
     assert (clipped_tensor3 >= rand1).all()
+
+
+@pytest.fixture
+def ent() -> Entity:
+    return Entity(name="test")
+
+
+def test_sort(
+    reference_data: np.ndarray,
+    upper_bound: np.ndarray,
+    lower_bound: np.ndarray,
+    ent: Entity,
+) -> None:
+    tensor = SEPT(
+        child=reference_data, entity=ent, max_vals=upper_bound, min_vals=lower_bound
+    )
+    tensor_sort = tensor.sort()
+    target = reference_data.sort()
+    assert tensor_sort.child == target
+
+
+def test_argsort(
+    reference_data: np.ndarray,
+    upper_bound: np.ndarray,
+    lower_bound: np.ndarray,
+    ent: Entity,
+) -> None:
+    tensor = SEPT(
+        child=reference_data, entity=ent, max_vals=upper_bound, min_vals=lower_bound
+    )
+    tensor_sort = tensor.argsort()
+    target = reference_data.argsort()
+    assert (tensor_sort.child == target).all()
+
+
+def test_lshift(
+    reference_data: np.ndarray,
+    upper_bound: np.ndarray,
+    lower_bound: np.ndarray,
+    ent: Entity,
+    highest,
+) -> None:
+    tensor = SEPT(
+        child=reference_data, entity=ent, max_vals=upper_bound, min_vals=lower_bound
+    )
+    shift = np.random.randint(1, highest)
+    tensor_lshift = tensor << shift
+    target = reference_data << shift
+    assert (tensor_lshift.child == target).all()
+
+
+def test_rshift(
+    reference_data: np.ndarray,
+    upper_bound: np.ndarray,
+    lower_bound: np.ndarray,
+    ent: Entity,
+    highest,
+) -> None:
+    tensor = SEPT(
+        child=reference_data, entity=ent, max_vals=upper_bound, min_vals=lower_bound
+    )
+    shift = np.random.randint(1, highest)
+    tensor_lshift = tensor >> shift
+    target = reference_data >> shift
+    assert (tensor_lshift.child == target).all()
+
+
+def test_xor(reference_binary_data: np.ndarray, ent: Entity) -> None:
+    tensor = SEPT(
+        child=reference_binary_data,
+        max_vals=np.ones_like(reference_binary_data),
+        min_vals=np.zeros_like(reference_binary_data),
+        entity=ent,
+    )
+    tensor_xor = tensor ^ False
+    target = reference_binary_data ^ False
+    assert (tensor_xor.child == target).all()

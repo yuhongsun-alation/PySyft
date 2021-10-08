@@ -573,6 +573,74 @@ class RowEntityPhiTensor(PassthroughTensor, ADPTensor):
 
         return RowEntityPhiTensor(rows=new_list, check_shape=False)
 
+    def sort(
+        self,
+        axis: Optional[int] = -1,
+        kind: Optional[str] = None,
+        order: Optional[str] = None,
+    ) -> RowEntityPhiTensor:
+        """Return a sorted copy of the tensor."""
+        new_list = list()
+        for row in self.child:
+            new_list.append(row.sort(axis, kind, order))
+
+        return RowEntityPhiTensor(rows=new_list, check_shape=False)
+
+    def argsort(
+        self,
+        axis: Optional[int] = -1,
+        kind: Optional[str] = None,
+        order: Optional[str] = None,
+    ) -> RowEntityPhiTensor:
+        """Returns the indices that would sort the tensor."""
+        new_list = list()
+        for row in self.child:
+            new_list.append(row.argsort(axis, kind, order))
+
+        return RowEntityPhiTensor(rows=new_list, check_shape=False)
+
+    def __lshift__(
+        self,
+        other: Any,
+    ) -> RowEntityPhiTensor:
+        """Shift the bits of an integer to the left."""
+        if is_acceptable_simple_type(other) or len(self.child) == len(other.child):
+            new_list = list()
+            for i in range(len(self.child)):
+                if is_acceptable_simple_type(other):
+                    new_list.append(self.child[i] << other)
+                else:
+                    new_list.append(self.child[i] << other.child[i])
+            return RowEntityPhiTensor(rows=new_list, check_shape=False)
+        else:
+            raise Exception(
+                f"Tensor dims do not match for __lshift__: {len(self.child)} != {len(other.child)}"
+            )
+
+    def __rshift__(
+        self,
+        other: Any,
+    ) -> RowEntityPhiTensor:
+        """Shift the bits of an integer to the right."""
+        if is_acceptable_simple_type(other) or len(self.child) == len(other.child):
+            new_list = list()
+            for i in range(len(self.child)):
+                if is_acceptable_simple_type(other):
+                    new_list.append(self.child[i] >> other)
+                else:
+                    new_list.append(self.child[i] >> other.child[i])
+            return RowEntityPhiTensor(rows=new_list, check_shape=False)
+        else:
+            raise Exception(
+                f"Tensor dims do not match for __rshift__: {len(self.child)} != {len(other.child)}"
+            )
+
+    def __xor__(self, other: Any) -> RowEntityPhiTensor:
+        """Compute the bit-wise XOR of REPT with other."""
+        return RowEntityPhiTensor(
+            rows=[x ^ other for x in self.child], check_shape=False
+        )
+
 
 @implements(RowEntityPhiTensor, np.expand_dims)
 def expand_dims(a: np.typing.ArrayLike, axis: int) -> RowEntityPhiTensor:
