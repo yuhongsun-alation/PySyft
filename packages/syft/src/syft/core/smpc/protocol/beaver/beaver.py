@@ -95,9 +95,7 @@ def _get_triples(
         seed_przs=seed_przs,
     )
     seed_przs = secrets.randbits(32)
-    print("cmd", cmd)
     c_val = cmd(a_rand, b_rand)
-    print("c_val", c_val)
     c_shares = MPCTensor._get_shares_from_local_secret(
         secret=deepcopy(c_val),
         parties_info=parties_info,  # type: ignore
@@ -128,9 +126,6 @@ def _get_triples(
     triple = list(
         map(list, zip(*map(lambda x: map(list, zip(*x)), triple_sequential)))  # type: ignore
     )
-    print("a", a_rand)
-    print("b", b_rand)
-    print("c", c_val)
     return triple  # type: ignore
 
 
