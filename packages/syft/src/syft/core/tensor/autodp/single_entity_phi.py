@@ -14,6 +14,7 @@ from google.protobuf.reflection import GeneratedProtocolMessageType
 from nacl.signing import VerifyKey
 import numpy as np
 import numpy.typing as npt
+import torch
 
 # relative
 from ....proto.core.tensor.single_entity_phi_tensor_pb2 import (
@@ -1386,8 +1387,17 @@ class SingleEntityPhiTensor(PassthroughTensor, AutogradTensorAncestor, ADPTensor
         order: Optional[str] = None,
     ) -> SingleEntityPhiTensor:
         """Return a sorted copy of the tensor."""
-        data = self.child.sort(axis, kind, order)
-        min_vals = self.min_vals.sort(axis, kind, order)
+        if is_acceptable_simple_type(self.child):
+            if isinstance(self.child, np.ndarray):
+                data = self.child.sort(axis, kind, order)
+            else:
+                # self.child is a singleton
+                data = self.child
+
+        elif isinstance(self.child, torch.Tensor):
+            data = self.child.numpy().sort(axis, kind, order)
+
+        min_vals = self.min_vals
         max_vals = self.max_vals.sort(axis, kind, order)
 
         return SingleEntityPhiTensor(
@@ -1405,9 +1415,25 @@ class SingleEntityPhiTensor(PassthroughTensor, AutogradTensorAncestor, ADPTensor
         order: Optional[str] = None,
     ) -> SingleEntityPhiTensor:
         """Returns the indices that would sort the tensor."""
-        data = self.child.argsort(axis, kind, order)
-        min_vals = np.zeros_like(self.child)
-        max_vals = np.full_like(self.child, self.max_vals.size - 1)
+        if is_acceptable_simple_type(self.child):
+            if isinstance(self.child, np.ndarray):
+                data = self.child.argsort(axis, kind, order)
+            else:
+                # self.child is a singleton
+                data = 0
+
+        elif isinstance(self.child, torch.Tensor):
+            data = self.child.numpy().argsort(axis, kind, order)
+
+        if isinstance(self.min_vals, np.ndarray):
+            min_vals = np.zeros_like(self.child)
+        else:
+            min_vals = 0
+
+        if isinstance(self.max_vals, np.ndarray):
+            max_vals = np.full_like(self.child, self.max_vals.size - 1)
+        else:
+            max_vals = self.max_vals.size - 1
 
         return SingleEntityPhiTensor(
             child=data,
@@ -1427,6 +1453,7 @@ class SingleEntityPhiTensor(PassthroughTensor, AutogradTensorAncestor, ADPTensor
             data = self.child << other
             min_vals = self.min_vals << other
             max_vals = self.max_vals << other
+
         elif isinstance(other, SingleEntityPhiTensor):
             if self.entity == other.entity:
                 data = self.child << other.child
@@ -1456,6 +1483,7 @@ class SingleEntityPhiTensor(PassthroughTensor, AutogradTensorAncestor, ADPTensor
             data = self.child >> other
             min_vals = self.min_vals >> other
             max_vals = self.max_vals >> other
+
         elif isinstance(other, SingleEntityPhiTensor):
             if self.entity == other.entity:
                 data = self.child >> other.child
@@ -1477,11 +1505,211 @@ class SingleEntityPhiTensor(PassthroughTensor, AutogradTensorAncestor, ADPTensor
 
     def __xor__(self, other: Any) -> SingleEntityPhiTensor:
         """Compute the bit-wise XOR of SEPT with another tensor/array/integer element-wise."""
+        if isinstance(other, SingleEntityPhiTensor):
+
+            if self.entity != other.entity:
+                return convert_to_gamma_tensor(self) ^ convert_to_gamma_tensor(other)
+
+            data = self.child ^ other.child
+
+            # TODO: Do we need to loop through the resultant tensor to find max? We can use bitmasking or trie.
+            min_vals = np.zeros_like(self.child)
+            max_vals = np.full_like(self.child, self.max_vals.flat[0])
+            entity = self.entity
+
+            return SingleEntityPhiTensor(
+                child=data,
+                entity=entity,
+                min_vals=min_vals,
+                max_vals=max_vals,
+                scalar_manager=self.scalar_manager,
+            )
+        elif is_acceptable_simple_type(other):
+
+            data = self.child ^ other
+
+            # TODO: Do we need to loop through the resultant tensor to find max? We can use bitmasking or trie.
+            min_vals = np.zeros_like(self.child)
+            max_vals = np.full_like(self.child, self.max_vals.flat[0])
+
+            entity = self.entity
+
+            return SingleEntityPhiTensor(
+                child=data,
+                entity=entity,
+                min_vals=min_vals,
+                max_vals=max_vals,
+                scalar_manager=self.scalar_manager,
+            )
+
+        else:
+            return NotImplemented
+
+    def argmax(
+        self,
+        axis: Optional[int] = None,
+    ) -> SingleEntityPhiTensor:
+        """Returns the indices of the maximum values along an axis."""
+        if is_acceptable_simple_type(self.child):
+            if isinstance(self.child, np.ndarray):
+                data = self.child.argmax(axis)
+            else:
+                # self.child is a singleton
+                data = 0
+
+        elif isinstance(self.child, torch.Tensor):
+            data = self.child.numpy().argmax(axis)
+
+        else:
+            raise NotImplementedError
+
+        if isinstance(self.min_vals, np.ndarray):
+            min_vals = np.argmax(self.min_vals)
+        else:
+            min_vals = 0
+
+        if isinstance(self.max_vals, np.ndarray):
+            max_vals = np.argmax(self.max_vals)
+        else:
+            max_vals = 0
+
         return SingleEntityPhiTensor(
-            child=self.child ^ other,
-            min_vals=np.zeros_like(self.child),
-            max_vals=np.zeros_like(self.child),
+            child=data,
             entity=self.entity,
+            min_vals=min_vals,
+            max_vals=max_vals,
+            scalar_manager=self.scalar_manager,
+        )
+
+    def argmin(
+        self,
+        axis: Optional[int] = None,
+    ) -> SingleEntityPhiTensor:
+        """Returns the indices of the minimum values along an axis."""
+
+        if is_acceptable_simple_type(self.child):
+            if isinstance(self.child, np.ndarray):
+                data = self.child.argmin(axis)
+            else:
+                # self.child is a singleton
+                data = 0
+
+        elif isinstance(self.child, torch.Tensor):
+            data = self.child.numpy().argmin(axis)
+
+        else:
+            raise NotImplementedError
+
+        if isinstance(self.min_vals, np.ndarray):
+            min_vals = np.argmin(self.min_vals)
+        else:
+            min_vals = 0
+
+        if isinstance(self.max_vals, np.ndarray):
+            max_vals = np.argmin(self.max_vals)
+        else:
+            max_vals = 0
+
+        return SingleEntityPhiTensor(
+            child=data,
+            entity=self.entity,
+            min_vals=min_vals,
+            max_vals=max_vals,
+            scalar_manager=self.scalar_manager,
+        )
+
+    def argpartition(
+        self,
+        kth: Union[int, List[int], np.ndarray],
+        axis: Optional[int] = -1,
+        kind: Optional[str] = "introselect",
+        order: Optional[Union[str, List[str]]] = None,
+    ) -> SingleEntityPhiTensor:
+        """Perform an indirect partition along the given axis"""
+        if (
+            isinstance(self.child, int)
+            or isinstance(self.child, float)
+            or isinstance(self.child, bool)
+        ):
+            print(
+                f"Warning: child metadata was of type {type(self.child)}, argpartition operation had no effect."
+            )
+            data = 0
+        else:
+            data = self.child.argpartition(kth, axis, kind, order)
+
+        if (
+            isinstance(self.min_vals, int)
+            or isinstance(self.min_vals, float)
+            or isinstance(self.min_vals, bool)
+        ):
+            print(
+                f"Warning: min_vals metadata was of type {type(self.min_vals)}, argpartition operation had no effect."
+            )
+            min_vals = 0
+        else:
+            min_vals = self.min_vals.argpartition(kth, axis, kind, order)
+
+        if (
+            isinstance(self.max_vals, int)
+            or isinstance(self.max_vals, float)
+            or isinstance(self.max_vals, bool)
+        ):
+            print(
+                f"Warning: max_vals metadata was of type {type(self.max_vals)}, argpartition operation had no effect."
+            )
+            max_vals = 0
+        else:
+            max_vals = self.max_vals.argpartition(kth, axis, kind, order)
+
+        return SingleEntityPhiTensor(
+            child=data,
+            entity=self.entity,
+            min_vals=min_vals,
+            max_vals=max_vals,
+            scalar_manager=self.scalar_manager,  # type: ignore
+        )
+
+    def searchsorted(
+        self,
+        v: npt.ArrayLike,
+        side: Optional[str] = "left",
+        sorter: Optional[npt.ArrayLike] = None,
+    ) -> SingleEntityPhiTensor:
+        """Find indices where elements should be inserted to maintain order."""
+        if is_acceptable_simple_type(self.child):
+            if isinstance(self.child, np.ndarray):
+                if self.child.ndim > 1:
+                    raise Exception(
+                        "ValueError: searchsorted requires an array of one dimension"
+                    )
+                data = self.child.searchsorted(v, side, sorter)
+            else:
+                # self.child is a singleton
+                data = (v > self.child) * 1
+
+        elif isinstance(self.child, torch.Tensor):
+            data = self.child.numpy().searchsorted(v, side, sorter)
+
+        else:
+            raise NotImplementedError
+
+        if isinstance(self.min_vals, np.ndarray):
+            min_vals = np.zeros_like(v)
+        else:
+            min_vals = 0
+
+        if isinstance(self.max_vals, np.ndarray):
+            max_vals = np.full_like(v, self.max_vals.size)
+        else:
+            max_vals = self.max_vals.size
+
+        return SingleEntityPhiTensor(
+            child=data,
+            entity=self.entity,
+            min_vals=min_vals,
+            max_vals=max_vals,
+            scalar_manager=self.scalar_manager,  # type: ignore
         )
 
 

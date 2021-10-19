@@ -813,8 +813,52 @@ def test_rshift(row_data_trask: List, highest: int) -> None:
         assert (tensor.child[i].child >> shift == tensor_lshift.child[i].child).all()
 
 
-def test_xor(row_data_trask: List, highest: int) -> None:
+def test_xor(row_data_trask: List) -> None:
     tensor = REPT(rows=row_data_trask)
     tensor_xor = tensor ^ False
     for i in range(len(tensor)):
         assert ((tensor.child[i].child ^ False) == tensor_xor.child[i].child).all()
+
+
+def test_argpartition(row_data_trask: List) -> None:
+    tensor = REPT(rows=row_data_trask)
+    k = 1
+    tensor_argpartition = tensor.argpartition(k)
+    for i in range(len(tensor)):
+        assert (
+            tensor.child[i].child.argpartition(k) == tensor_argpartition.child[i].child
+        ).all()
+
+
+@pytest.fixture
+def row_1d_data(
+    row_count: int,
+    dims: int,
+    highest: int,
+    traskmaster: Entity,
+    scalar_manager: ScalarManager,
+) -> List:
+    """This generates a random number of SEPTs to populate the REPTs."""
+    reference_data = []
+    for _ in range(row_count):
+        new_data = np.random.randint(
+            low=-highest, high=highest, size=dims, dtype=np.int32
+        )
+        reference_data.append(
+            SEPT(
+                child=new_data,
+                entity=traskmaster,
+                min_vals=np.ones_like(new_data) * -highest,
+                max_vals=np.ones_like(new_data) * highest,
+                scalar_manager=scalar_manager,
+            )
+        )
+    return reference_data
+
+
+def test_searchsorted(row_1d_data: List) -> None:
+    tensor = REPT(rows=row_1d_data)
+    v = [-1, 0, 1]
+    tensor1 = tensor.searchsorted(v)
+    for i in range(len(tensor)):
+        assert (tensor.child[i].child.searchsorted(v) == tensor1.child[i].child).all()

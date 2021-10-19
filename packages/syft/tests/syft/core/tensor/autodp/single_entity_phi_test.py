@@ -1452,3 +1452,63 @@ def test_xor(reference_binary_data: np.ndarray, ent: Entity) -> None:
     tensor_xor = tensor ^ False
     target = reference_binary_data ^ False
     assert (tensor_xor.child == target).all()
+
+
+def test_argpartition(
+    reference_data: np.ndarray,
+    upper_bound: np.ndarray,
+    lower_bound: np.ndarray,
+    ent: Entity,
+) -> None:
+    tensor = SEPT(
+        child=reference_data, max_vals=upper_bound, min_vals=lower_bound, entity=ent
+    )
+
+    k = 1
+
+    # with default axis None, i.e. for flattened array
+    tensor1 = tensor.argpartition(k)
+    tensor2 = tensor.argpartition(k, axis=1)
+
+    assert (tensor1.child == reference_data.argpartition(k)).all()
+    assert (tensor2.child == reference_data.argpartition(k, axis=1)).all()
+
+
+@pytest.fixture
+def reference_1d_data(highest, dims) -> np.ndarray:
+    reference_data = np.random.randint(
+        low=-highest, high=highest, size=dims, dtype=np.int32
+    )
+    return reference_data
+
+
+@pytest.fixture
+def upper_1d_bound(reference_1d_data: np.ndarray, highest: int) -> np.ndarray:
+    max_values = np.ones_like(reference_1d_data) * highest
+    return max_values
+
+
+@pytest.fixture
+def lower_1d_bound(reference_1d_data: np.ndarray, highest: int) -> np.ndarray:
+    min_values = np.ones_like(reference_1d_data) * -highest
+    return min_values
+
+
+def test_searchsorted(
+    reference_1d_data: np.ndarray,
+    upper_1d_bound: np.ndarray,
+    lower_1d_bound: np.ndarray,
+    ent: Entity,
+) -> None:
+    tensor = SEPT(
+        child=reference_1d_data,
+        max_vals=upper_1d_bound,
+        min_vals=lower_1d_bound,
+        entity=ent,
+    )
+
+    v = [-1, 0, 1]
+
+    tensor1 = tensor.searchsorted(v)
+
+    assert (tensor1.child == reference_1d_data.searchsorted(v)).all()

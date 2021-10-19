@@ -641,6 +641,55 @@ class RowEntityPhiTensor(PassthroughTensor, ADPTensor):
             rows=[x ^ other for x in self.child], check_shape=False
         )
 
+    def argmax(
+        self,
+        axis: Optional[int] = None,
+    ) -> RowEntityPhiTensor:
+        """Returns the indices of the maximum values along an axis."""
+        new_list = list()
+        for row in self.child:
+            new_list.append(row.argmax(axis))
+
+        return RowEntityPhiTensor(rows=new_list, check_shape=False)
+
+    def argmin(
+        self,
+        axis: Optional[int] = None,
+    ) -> RowEntityPhiTensor:
+        """Returns the indices of the minimum values along an axis."""
+        new_list = list()
+        for row in self.child:
+            new_list.append(row.argmin(axis))
+
+        return RowEntityPhiTensor(rows=new_list, check_shape=False)
+
+    def argpartition(
+        self,
+        kth: Union[int, List[int], np.ndarray],
+        axis: Optional[int] = -1,
+        kind: Optional[str] = "introselect",
+        order: Optional[Union[str, List[str]]] = None,
+    ) -> RowEntityPhiTensor:
+        """Perform an indirect partition along the given axis"""
+        new_list = list()
+        for row in self.child:
+            new_list.append(row.argpartition(kth, axis, kind, order))
+
+        return RowEntityPhiTensor(rows=new_list, check_shape=False)
+
+    def searchsorted(
+        self,
+        v: npt.ArrayLike,
+        side: Optional[str] = "left",
+        sorter: Optional[npt.ArrayLike] = None,
+    ) -> RowEntityPhiTensor:
+        """Find indices where elements should be inserted to maintain order."""
+        new_list = list()
+        for row in self.child:
+            new_list.append(row.searchsorted(v, side, sorter))
+
+        return RowEntityPhiTensor(rows=new_list, check_shape=False)
+
 
 @implements(RowEntityPhiTensor, np.expand_dims)
 def expand_dims(a: np.typing.ArrayLike, axis: int) -> RowEntityPhiTensor:
