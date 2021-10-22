@@ -945,3 +945,17 @@ def test_diagonal(row_data_trask: List, dims: int) -> None:
             assert (
                 tensor_diagonal.child[i].child[j] == tensor.child[i].child[j][j]
             ).all()
+
+
+def test_argmax(row_data_trask: List) -> None:
+    tensor = REPT(rows=row_data_trask)
+    output = tensor.argmax()
+    for i in range(len(tensor)):
+        assert (tensor.child[i].child.argmax() == output.child[i].child).all()
+
+
+def test_argmin(row_data_trask: List) -> None:
+    tensor = REPT(rows=row_data_trask)
+    output = tensor.argmin()
+    for i in range(len(tensor)):
+        assert (tensor.child[i].child.argmin() == output.child[i].child).all()

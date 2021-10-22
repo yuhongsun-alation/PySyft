@@ -1760,6 +1760,34 @@ def test_diagonal(
         assert (tensor_diagonal.child[i] == tensor.child[i][i]).all()
 
 
+def test_argmax(
+    reference_data: np.ndarray,
+    upper_bound: np.ndarray,
+    lower_bound: np.ndarray,
+    ent: Entity,
+) -> None:
+    tensor = SEPT(
+        child=reference_data, entity=ent, max_vals=upper_bound, min_vals=lower_bound
+    )
+    output = tensor.argmax()
+    target = reference_data.argmax()
+    assert (output.child == target).all()
+
+
+def test_argmin(
+    reference_data: np.ndarray,
+    upper_bound: np.ndarray,
+    lower_bound: np.ndarray,
+    ent: Entity,
+) -> None:
+    tensor = SEPT(
+        child=reference_data, entity=ent, max_vals=upper_bound, min_vals=lower_bound
+    )
+    output = tensor.argmin()
+    target = reference_data.argmin()
+    assert (output.child == target).all()
+
+
 #
 # ######################### ADD ############################
 #

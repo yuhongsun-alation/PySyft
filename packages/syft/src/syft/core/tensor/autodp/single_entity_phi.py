@@ -1857,6 +1857,80 @@ class SingleEntityPhiTensor(PassthroughTensor, AutogradTensorAncestor, ADPTensor
             entity=self.entity,
         )
 
+    def argmax(
+        self,
+        axis: Optional[int] = None,
+    ) -> SingleEntityPhiTensor:
+        """Returns the indices of the maximum values along an axis."""
+
+        if is_acceptable_simple_type(self.child):
+            if isinstance(self.child, np.ndarray):
+                data = self.child.argmax(axis)
+            else:
+                # self.child is a singleton
+                data = 0
+
+        elif isinstance(self.child, torch.Tensor):
+            data = self.child.numpy().argmax(axis)
+
+        else:
+            raise NotImplementedError
+
+        if isinstance(self.min_vals, np.ndarray):
+            min_vals = np.zeros_like(self.child)
+        else:
+            min_vals = 0
+
+        if isinstance(self.max_vals, np.ndarray):
+            max_vals = np.full_like(self.child, sum(list(self.child.shape)) - 1)
+        else:
+            max_vals = sum(list(self.child.shape)) - 1
+
+        return SingleEntityPhiTensor(
+            child=data,
+            entity=self.entity,
+            min_vals=min_vals,
+            max_vals=max_vals,
+            scalar_manager=self.scalar_manager,
+        )
+
+    def argmin(
+        self,
+        axis: Optional[int] = None,
+    ) -> SingleEntityPhiTensor:
+        """Returns the indices of the minimum values along an axis."""
+
+        if is_acceptable_simple_type(self.child):
+            if isinstance(self.child, np.ndarray):
+                data = self.child.argmin(axis)
+            else:
+                # self.child is a singleton
+                data = 0
+
+        elif isinstance(self.child, torch.Tensor):
+            data = self.child.numpy().argmin(axis)
+
+        else:
+            raise NotImplementedError
+
+        if isinstance(self.min_vals, np.ndarray):
+            min_vals = np.zeros_like(self.child)
+        else:
+            min_vals = 0
+
+        if isinstance(self.max_vals, np.ndarray):
+            max_vals = np.full_like(self.child, sum(list(self.child.shape)) - 1)
+        else:
+            max_vals = sum(list(self.child.shape)) - 1
+
+        return SingleEntityPhiTensor(
+            child=data,
+            entity=self.entity,
+            min_vals=min_vals,
+            max_vals=max_vals,
+            scalar_manager=self.scalar_manager,
+        )
+
 
 @implements(SingleEntityPhiTensor, np.expand_dims)
 def expand_dims(a: npt.ArrayLike, axis: Optional[int] = None) -> SingleEntityPhiTensor:

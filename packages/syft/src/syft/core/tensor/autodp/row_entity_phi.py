@@ -745,6 +745,28 @@ class RowEntityPhiTensor(PassthroughTensor, ADPTensor):
 
         return RowEntityPhiTensor(rows=new_list, check_shape=False)
 
+    def argmax(
+        self,
+        axis: Optional[int] = None,
+    ) -> RowEntityPhiTensor:
+        """Returns the indices of the maximum values along an axis."""
+        new_list = list()
+        for row in self.child:
+            new_list.append(row.argmax(axis))
+
+        return RowEntityPhiTensor(rows=new_list, check_shape=False)
+
+    def argmin(
+        self,
+        axis: Optional[int] = None,
+    ) -> RowEntityPhiTensor:
+        """Returns the indices of the minimum values along an axis."""
+        new_list = list()
+        for row in self.child:
+            new_list.append(row.argmin(axis))
+
+        return RowEntityPhiTensor(rows=new_list, check_shape=False)
+
 
 @implements(RowEntityPhiTensor, np.expand_dims)
 def expand_dims(a: np.typing.ArrayLike, axis: int) -> RowEntityPhiTensor:
