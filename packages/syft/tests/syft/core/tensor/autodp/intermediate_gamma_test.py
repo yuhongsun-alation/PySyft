@@ -652,3 +652,104 @@ def test_max(non_square_gamma_tensor: IGT) -> None:
     old_entities = non_square_gamma_tensor._entities()
     new_entities = output._entities()
     assert old_entities.shape != new_entities.shape
+
+@pytest.mark.skip(reason="Temporary, while __init__ is being fixed")
+def test_argmax(non_square_gamma_tensor: IGT) -> None:
+    """Test the argmax operator default behaviour (no args)"""
+    output = non_square_gamma_tensor.argmax()
+    original_values = non_square_gamma_tensor._values()
+
+    assert non_square_gamma_tensor.shape == original_values.shape
+
+    target_values = original_values.argmax()
+    assert output.shape == target_values.shape
+
+    output_values = output._values()
+    assert output_values.shape != original_values.shape
+    assert output_values.shape == target_values.shape
+
+    assert (output_values == target_values).all()
+
+    old_entities = non_square_gamma_tensor._entities()
+    new_entities = output._entities()
+    assert old_entities.shape != new_entities.shape
+
+@pytest.mark.skip(reason="Temporary, while __init__ is being fixed")
+def test_argmin(non_square_gamma_tensor: IGT) -> None:
+    """Test the argmin operator default behaviour (no args)"""
+    output = non_square_gamma_tensor.argmin()
+    original_values = non_square_gamma_tensor._values()
+
+    assert non_square_gamma_tensor.shape == original_values.shape
+
+    target_values = original_values.argmin()
+    assert output.shape == target_values.shape
+
+    output_values = output._values()
+    assert output_values.shape != original_values.shape
+    assert output_values.shape == target_values.shape
+
+    assert (output_values == target_values).all()
+
+    old_entities = non_square_gamma_tensor._entities()
+    new_entities = output._entities()
+    assert old_entities.shape != new_entities.shape
+
+@pytest.mark.skip(reason="Temporary, while __init__ is being fixed")
+def test_nonzero(non_square_gamma_tensor: IGT) -> None:
+    """Test the nonzero operator default behaviour (no args)"""
+    output = non_square_gamma_tensor.nonzero()
+    original_values = non_square_gamma_tensor._values()
+
+    assert non_square_gamma_tensor.shape == original_values.shape
+
+    target_values = original_values.nonzero()
+    assert output.shape == target_values.shape
+
+    output_values = output._values()
+    assert output_values.shape != original_values.shape
+    assert output_values.shape == target_values.shape
+
+    assert (output_values == target_values).all()
+
+    old_entities = non_square_gamma_tensor._entities()
+    new_entities = output._entities()
+    assert old_entities.shape != new_entities.shape
+
+def test_std(non_square_gamma_tensor: IGT) -> None:
+    output = non_square_gamma_tensor.std()
+    original_values = non_square_gamma_tensor._values()
+
+    assert non_square_gamma_tensor.shape == original_values.shape
+
+    target_values = original_values.std()
+    assert output.shape == target_values.shape
+
+    output_values = output._values()
+    assert output_values.shape != original_values.shape
+    assert output_values.shape == target_values.shape
+
+    assert (output_values == target_values).all()
+
+    old_entities = non_square_gamma_tensor._entities()
+    new_entities = output._entities()
+    assert old_entities.shape != new_entities.shape
+
+def test_var(non_square_gamma_tensor: IGT) -> None:
+    output = non_square_gamma_tensor.var()
+    original_values = non_square_gamma_tensor._values()
+
+    assert non_square_gamma_tensor.shape == original_values.shape
+
+    target_values = original_values.var()
+    assert output.shape == target_values.shape
+
+    output_values = output._values()
+    assert output_values.shape != original_values.shape
+    assert output_values.shape == target_values.shape
+
+    assert (output_values == target_values).all()
+
+    old_entities = non_square_gamma_tensor._entities()
+    new_entities = output._entities()
+    assert old_entities.shape != new_entities.shape

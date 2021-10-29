@@ -10,9 +10,12 @@ from typing import Sequence
 from typing import Tuple
 from typing import Union
 
+from numpy.core.numeric import full_like
+
 # third party
 from nacl.signing import VerifyKey
 import numpy as np
+import numpy.typing as npt
 from sympy.ntheory.factor_ import factorint
 
 # relative
@@ -1130,4 +1133,81 @@ class IntermediateGammaTensor(PassthroughTensor, ADPTensor):
             max_vals=self._max_values().take(indices),
             min_vals=self._min_values().take(indices),
             scalar_manager=self.scalar_manager,
+        )
+
+    def argmax(
+        self, axis: Optional[int] = None
+    ) -> IntermediateGammaTensor:
+        from .initial_gamma import InitialGammaTensor
+
+        vals = self._values()
+        indices = vals.argmax(axis)
+
+        return InitialGammaTensor(
+            values=indices,
+            entities=self._entities().take(indices),
+            max_vals=np.full_like(indices, sum(list(vals.shape)) - 1),
+            min_vals=np.zeros_like(indices),
+        )
+    
+    def argmin(
+        self, axis: Optional[int] = None
+    ) -> IntermediateGammaTensor:
+        from .initial_gamma import InitialGammaTensor
+
+        vals = self._values()
+        indices = vals.argmin(axis)
+
+        return InitialGammaTensor(
+            values=indices,
+            entities=np.array(list(self._entities())).take(indices),
+            max_vals=np.full_like(indices, sum(list(vals.shape)) - 1),
+            min_vals=np.zeros_like(indices),
+        )
+
+    def nonzero(self) -> IntermediateGammaTensor:
+        from .initial_gamma import InitialGammaTensor
+
+        vals = self._values()
+        indices = vals.nonzero()
+
+        return InitialGammaTensor(
+            values=indices,
+            entities=np.array(list(self._entities())).take(indices),
+            max_vals=np.full_like(indices, sum(list(vals.shape)) - 1),
+            min_vals=np.zeros_like(indices),
+        )
+
+    def std(
+        self, 
+        *args: Any, 
+        **kwargs: Any
+    ) -> IntermediateGammaTensor:
+
+        from .initial_gamma import InitialGammaTensor
+
+        vals = self._values().std(*args, **kwargs)
+
+        return InitialGammaTensor(
+            values=vals,
+            entities=self._entities(),
+            min_vals=np.zeros_like(vals),
+            max_vals=np.max(self._max_values() - self._min_values(), **kwargs),
+        )
+
+    def var(
+        self, 
+        *args: Any, 
+        **kwargs: Any
+    ) -> IntermediateGammaTensor:
+        
+        from .initial_gamma import InitialGammaTensor
+
+        vals = self._values().var(*args, **kwargs)
+
+        return InitialGammaTensor(
+            values=vals,
+            entities=self._entities(),
+            min_vals=np.zeros_like(vals),
+            max_vals=np.max(self._max_values() - self._min_values(), **kwargs) ** 2,
         )
