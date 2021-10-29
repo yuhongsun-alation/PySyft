@@ -1211,3 +1211,64 @@ class IntermediateGammaTensor(PassthroughTensor, ADPTensor):
             min_vals=np.zeros_like(vals),
             max_vals=np.max(self._max_values() - self._min_values(), **kwargs) ** 2,
         )
+
+    def __truediv__(self, other: Union[np.ndarray, IntermediateGammaTensor]) -> Any:
+        if isinstance(other, np.ndarray):
+            if is_broadcastable(self.shape, other.shape):
+                from .initial_gamma import InitialGammaTensor
+
+                if (other == 0).any():
+                    raise Exception(
+                        "RuntimeWarning: divide by zero encountered in divide"
+                    )
+
+                vals = self._values()
+                tensor = InitialGammaTensor(
+                    values = vals / other,
+                    min_vals=np.zeros_like(vals),
+                    max_vals=np.ones_like(vals),
+                    entities=self._entities(),
+                )
+
+            else:
+                raise Exception(
+                    f"Tensor shapes not compatible: {self.shape} and {other.shape}"
+                )
+
+        elif is_acceptable_simple_type(other):
+            if not (other):
+                raise Exception(
+                        "RuntimeWarning: divide by zero encountered in divide"
+                    )
+            from .initial_gamma import InitialGammaTensor
+            vals = self._values()
+            tensor = InitialGammaTensor(
+                values = vals / other,
+                min_vals=np.zeros_like(vals),
+                max_vals=np.ones_like(vals),
+                entities=self._entities(),
+            ) 
+
+        elif isinstance(other, IntermediateGammaTensor):
+            if is_broadcastable(self.shape, other.shape):
+                from .initial_gamma import InitialGammaTensor
+
+                self_vals = self._values()
+                other_vals = other._values()
+                if (other_vals == 0).any():
+                    raise Exception(
+                        "RuntimeWarning: divide by zero encountered in divide"
+                    )
+                tensor = InitialGammaTensor(
+                    values=self_vals / other_vals,
+                    min_vals=np.zeros_like(self_vals),
+                    max_vals=np.ones_like(self_vals),
+                    entities=self._entities() + other._entities(),
+                )
+            else:
+                raise Exception(
+                    f"Tensor shapes not compatible: {self.shape} and {other.shape}"
+                )
+        else:
+            raise NotImplementedError
+        return tensor

@@ -753,3 +753,19 @@ def test_var(non_square_gamma_tensor: IGT) -> None:
     old_entities = non_square_gamma_tensor._entities()
     new_entities = output._entities()
     assert old_entities.shape != new_entities.shape
+
+def test_truediv(non_square_gamma_tensor: IGT) -> None:
+    val = np.random.randint(1, 10)
+    output = non_square_gamma_tensor / val
+    original_values = non_square_gamma_tensor._values()
+
+    assert non_square_gamma_tensor.shape == original_values.shape
+
+    target_values = original_values / val
+    assert output.shape == target_values.shape
+
+    output_values = output._values()
+    assert output_values.shape == target_values.shape
+
+    assert (output_values == target_values).all()
+
