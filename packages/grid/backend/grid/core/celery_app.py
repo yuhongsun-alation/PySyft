@@ -62,7 +62,3 @@ celery_app.conf.task_routes = {
     "grid.worker.msg_without_reply": "main-queue",
     "delivery_mode": "transient",
 }
-celery_app.worker_prefetch_multiplier = 1
-celery_app.conf.accept_content = ["application/syft"]
-celery_app.conf.task_serializer = "syft"
-celery_app.conf.result_serializer = "syft"

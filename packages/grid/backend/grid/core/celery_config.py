@@ -4,6 +4,9 @@ task_time_limit = 300  # Rasswanth: should modify after optimizing PC
 task_acks_late = True
 broker_pool_limit = 500
 worker_prefetch_multiplier = 1
+accept_content = ["application/syft"]
+task_serializer = "syft"
+result_serializer = "syft"
 
 # celery_app.conf.result_backend = "db+sqlite:///results.db"
 # celery_app.conf.result_backend = "file:///tmp/results"

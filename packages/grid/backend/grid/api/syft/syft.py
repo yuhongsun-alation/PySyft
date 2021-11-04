@@ -13,6 +13,9 @@ from syft import deserialize
 from syft import serialize
 from syft.core.common.message import SignedImmediateSyftMessageWithReply
 from syft.core.common.message import SignedImmediateSyftMessageWithoutReply
+from syft.core.node.common.action.action_sequence import ActionSequence
+from syft.core.node.common.action.beaver_action import BeaverAction
+from syft.core.node.common.action.save_object_action import SaveObjectAction
 from syft.core.node.domain.enums import RequestAPIFields
 
 # grid absolute
@@ -81,7 +84,17 @@ async def syft_stream(
         try:
             # we pass in the bytes and they get handled by the custom serde code
             # inside celery_app.py
-            celery_app.send_task("grid.worker.msg_without_reply", args=[data])
+            obj_msg = deserialize(blob=data, from_bytes=True)
+            if not isinstance(
+                obj_msg, (SaveObjectAction, ActionSequence, BeaverAction)
+            ):
+                celery_app.send_task(
+                    "grid.worker.msg_without_reply", args=[data], queue="main-queue"
+                )
+            else:
+                celery_app.send_task(
+                    "grid.worker.msg_without_reply", args=[data], queue="cpu-bound"
+                )
         except Exception as e:
             print(f"Failed to queue work on streaming endpoint. {type(data)}. {e}")
     else:
