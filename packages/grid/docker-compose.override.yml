@@ -113,14 +113,15 @@ services:
       - ../syft:/app/syft #- ../syft:/app/syft
       - ../../notebooks:/notebooks
       - ./data/package-cache:/root/.cache
+    command: bash -c "celery -A grid.worker worker -l info -Q cpu-bound --pool=solo -n cpu_worker@%h"
+    command: bash -c "celery -A grid.worker worker -l info -Q main-queue --pool=gevent -c 500 -n io_worker@%h"
     environment:
-      - RUN=celery -A grid.worker worker -l info -Q main-queue --pool=gevent -c 500 -n io_worker@%h
       - SERVER_HOST=http://${DOMAIN?Variable not set}
       - SYFT_USE_UVLOOP=0
       - DOMAIN_NAME=${DOMAIN_NAME?Variable not set}
       - C_FORCE_ROOT=1
       - STACK_API_KEY=$STACK_API_KEY
-    command: bash -c "celery -A grid.worker worker -l info -Q cpu-bound --pool=solo -n cpu_worker@%h"
+    
     build:
       context: ../
       dockerfile: ./grid/backend/backend.dockerfile
