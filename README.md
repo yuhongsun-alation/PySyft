@@ -1,3 +1,5 @@
+Adding Deep learning features to Pysyft 0.6
+
 <h1 align="center">
 
   <br>
